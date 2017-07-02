@@ -17,4 +17,4 @@ spc700 = { version = "0.1", path = "../spc700" }
 byte_array = { version = "0.1", path = "../byte_array" }
 libsavestate = { version = "0.1", path = "../libsavestate" }
 log = "0.3"
-byteorder = "0.5"
+byteorder = "1.0"

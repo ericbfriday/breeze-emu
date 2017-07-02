@@ -23,7 +23,7 @@ breeze_backends = { version = "0.1", path = "src/breeze_backends" }
 breeze_backend = { version = "0.1", path = "src/breeze_backend" }
 libsavestate = { version = "0.1", path = "src/libsavestate" }
 log = "0.3"
-env_logger = "0.3"
+env_logger = "0.4"
 # clap comes with a few optional features we don't really need (colored output
 # and command correction)
 clap = { version = "2.0", default-features = false }
@@ -34,7 +34,8 @@ term = "0.4"
 # Disable PNG default features (PNG encoding) since that would depend on flate2
 # and thus C code (this is also the reason we depend directly on png instead of
 # the image crate)
-png = { version = "0.5", default-features = false }
+# FIXME: This should be unnecessary now, maybe we can switch to `image`?
+png = { version = "0.9", default-features = false }
 
 [features]
 # reexport backends
