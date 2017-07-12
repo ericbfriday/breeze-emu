@@ -3,7 +3,7 @@
 use super::{Ppu, SnesRgb};
 use super::oam::OamEntry;
 
-use flexvec::FlexVec;
+use slicevec::SliceVec;
 
 /// Information saved about individual sprite layer pixels. Prerendered into the scanline cache.
 #[derive(Copy, Clone)]
@@ -69,7 +69,7 @@ impl Ppu {
         // Find the first 32 sprites on the current scanline (RANGE)
         // NB Priority is ignored for this step, it's only used for drawing, which isn't done here
         let mut visible_sprites = [OamEntry::default(); 32];
-        let mut visible_sprites = FlexVec::new(&mut visible_sprites);
+        let mut visible_sprites = SliceVec::new(&mut visible_sprites);
         for i in first_sprite..first_sprite+128 {
             let index = (i & 0x7f) as u8;   // limit to 127 and wrap back around
             let entry = self.oam.get_sprite(index);
@@ -91,7 +91,7 @@ impl Ppu {
         // FIXME Is this ^^ correct?
 
         let mut visible_tiles = [SpriteTile::default(); 34];
-        let mut visible_tiles = FlexVec::new(&mut visible_tiles);
+        let mut visible_tiles = SliceVec::new(&mut visible_tiles);
 
         // Word address of first sprite character table
         let name_base: u16 = (self.obsel as u16 & 0b111) << 13;

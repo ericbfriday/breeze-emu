@@ -3,6 +3,7 @@
 
 #[macro_use] extern crate log;
 extern crate byteorder;
+extern crate slicevec;
 
 #[macro_use] #[no_link] extern crate byte_array;
 #[macro_use] extern crate libsavestate;
@@ -12,7 +13,6 @@ extern crate breeze_backend;
 
 #[macro_use] mod log_util;
 pub mod dma;
-mod flexvec;
 pub mod record;
 pub mod ppu;
 pub mod input;
