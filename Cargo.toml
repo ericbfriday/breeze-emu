@@ -4,7 +4,6 @@ version = "0.1.0"
 authors = ["Jonas Schievink <jonasschievink@gmail.com>"]
 license = "Apache-2.0/MIT"
 repository = "https://github.com/jonas-schievink/breeze-emu"
-homepage = "https://github.com/jonas-schievink/breeze-emu"
 # (not techincally correct, but...)
 documentation = "https://jonas-schievink.github.io/breeze-emu/breeze_core/"
 
