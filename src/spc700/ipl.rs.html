@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="Source to the Rust file `/home/travis/build/jonas-schievink/breeze-emu/src/spc700/ipl.rs`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang">
+
+    <title>ipl.rs.html -- source</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc source">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Contains the IPL ROM (Initial Program Load) that is mapped into the upper 64 Bytes of the</span>
+<span class="doccomment">//! SPC700&#39;s address space. The IPL ROM will perform some basic setup and then wait for the main</span>
+<span class="doccomment">//! CPU to transfer a program, which is then executed.</span>
+
+<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">IPL_ROM</span>: [<span class="ident">u8</span>; <span class="number">64</span>] <span class="op">=</span> [
+    <span class="comment">// NOTE: mov operands are `dest, source`</span>
+
+    <span class="comment">// Set up stack pointer at $01ef</span>
+    <span class="number">0xcd</span>, <span class="number">0xef</span>,         <span class="comment">// FFC0  mov x, #$ef</span>
+    <span class="number">0xbd</span>,               <span class="comment">// FFC2  mov sp, x</span>
+    <span class="comment">// Fill memory at $00-$ef with $00 (also sets all registers to 0)</span>
+    <span class="number">0xe8</span>, <span class="number">0x00</span>,         <span class="comment">// FFC3  mov a, #$00</span>
+    <span class="number">0xc6</span>,               <span class="comment">// FFC5  mov (x), a       :fill_zero_page</span>
+    <span class="number">0x1d</span>,               <span class="comment">// FFC6  dec x</span>
+    <span class="number">0xd0</span>, <span class="number">0xfc</span>,         <span class="comment">// FFC7  bne $ffc5        -&gt; fill_zero_page</span>
+
+    <span class="comment">// Write 0xaabb to ports 0 and 1 (registers $f4 and $f5)</span>
+    <span class="comment">// This is the &quot;ready&quot; signal. The main CPU will wait until it sees it.</span>
+    <span class="number">0x8f</span>, <span class="number">0xaa</span>, <span class="number">0xf4</span>,   <span class="comment">// FFC9  mov $f4, #$aa</span>
+    <span class="number">0x8f</span>, <span class="number">0xbb</span>, <span class="number">0xf5</span>,   <span class="comment">// FFCC  mov $f5, #$bb</span>
+
+    <span class="comment">// Wait until $cc is written to port 0 (reg $f4)</span>
+    <span class="number">0x78</span>, <span class="number">0xcc</span>, <span class="number">0xf4</span>,   <span class="comment">// FFCF  cmp $f4, #$cc    :wait_start</span>
+    <span class="number">0xd0</span>, <span class="number">0xfb</span>,         <span class="comment">// FFD2  bne $ffcf        -&gt; wait_start</span>
+
+    <span class="number">0x2f</span>, <span class="number">0x19</span>,         <span class="comment">// FFD4  bra $ffef        -&gt; start</span>
+    <span class="comment">//---------------</span>
+
+    <span class="comment">// Wait until a non-zero value is in reg 0</span>
+    <span class="number">0xeb</span>, <span class="number">0xf4</span>,         <span class="comment">// FFD6  mov y, $f4       :recv</span>
+    <span class="number">0xd0</span>, <span class="number">0xfc</span>,         <span class="comment">// FFD8  bne $ffd6        -&gt; recv</span>
+
+    <span class="number">0x7e</span>, <span class="number">0xf4</span>,         <span class="comment">// FFDA  cmp y, $f4       :loop</span>
+    <span class="number">0xd0</span>, <span class="number">0x0b</span>,         <span class="comment">// FFDC  bne $ffe9        -&gt; lbl1</span>
+    <span class="number">0xe4</span>, <span class="number">0xf5</span>,         <span class="comment">// FFDE  mov a, $f5</span>
+    <span class="number">0xcb</span>, <span class="number">0xf4</span>,         <span class="comment">// FFE0  mov $f4, y</span>
+    <span class="number">0xd7</span>, <span class="number">0x00</span>,         <span class="comment">// FFE2  mov [$00]+y, a</span>
+    <span class="number">0xfc</span>,               <span class="comment">// FFE4  inc y</span>
+    <span class="number">0xd0</span>, <span class="number">0xf3</span>,         <span class="comment">// FFE5  bne $ffda        -&gt; loop</span>
+    <span class="number">0xab</span>, <span class="number">0x01</span>,         <span class="comment">// FFE7  inc $01</span>
+    <span class="number">0x10</span>, <span class="number">0xef</span>,         <span class="comment">// FFE9  bpl $ffda        :lbl1   -&gt; loop</span>
+    <span class="number">0x7e</span>, <span class="number">0xf4</span>,         <span class="comment">// FFEB  cmp y, $f4</span>
+    <span class="number">0x10</span>, <span class="number">0xeb</span>,         <span class="comment">// FFED  bpl $ffda        -&gt; loop</span>
+
+    <span class="comment">// Load reg 2 ($f6) into y and reg 3 ($f7) into a</span>
+    <span class="number">0xba</span>, <span class="number">0xf6</span>,         <span class="comment">// FFEF  movw ya, $f6     :start</span>
+    <span class="comment">// Write Y and A in memory at $00 and $01</span>
+    <span class="number">0xda</span>, <span class="number">0x00</span>,         <span class="comment">// FFF1  movw $00, ya</span>
+    <span class="comment">// Load reg 0 ($f4) into y, reg 1 ($f5) into a</span>
+    <span class="number">0xba</span>, <span class="number">0xf4</span>,         <span class="comment">// FFF3  movw ya, $f4</span>
+    <span class="comment">// Write reg 1&#39;s value to reg 0</span>
+    <span class="number">0xc4</span>, <span class="number">0xf4</span>,         <span class="comment">// FFF5  mov $f4, a</span>
+    <span class="number">0xdd</span>,               <span class="comment">// FFF7  mov a, y</span>
+    <span class="number">0x5d</span>,               <span class="comment">// FFF8  mov x, a</span>
+    <span class="comment">// If reg 1&#39;s value is not 0, start the transmission loop</span>
+    <span class="number">0xd0</span>, <span class="number">0xdb</span>,         <span class="comment">// FFF9  bne $ffd6 (-37)  -&gt; recv</span>
+
+    <span class="comment">// We&#39;re done, jump to the address we just received and stored in $0000 (x is 0 here)</span>
+    <span class="number">0x1f</span>, <span class="number">0x00</span>, <span class="number">0x00</span>,   <span class="comment">// FFFB  jmp [$0000+x]</span>
+
+    <span class="comment">// reset vector is at 0xfffe and points to the start of the IPL ROM: 0xffc0</span>
+    <span class="number">0xc0</span>, <span class="number">0xff</span>,
+];
+</pre>
+</section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "spc700";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Rom","A ROM image"],["RomHeader","The (decoded) SNES header"]]});

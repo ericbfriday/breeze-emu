@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["DummyRenderer","Renderer that just does nothing, apart from saving the PPU output for later use. This allows users to extract single rendered frames without having to implement `Renderer`."],["DummySink","Dummy audio sink with no output"]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["SaveStateFormat","Enum of supported save state formats"]]});

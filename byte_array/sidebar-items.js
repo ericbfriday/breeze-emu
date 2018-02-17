@@ -1,0 +1,1 @@
+initSidebarItems({"macro":[["byte_array","Create a newtype wrapper for `[u8; $size]` that implements `Deref`, `DerefMut` and `Default`."],["impl_byte_array","hidden"],["impl_byte_array_extra","hidden"]]});

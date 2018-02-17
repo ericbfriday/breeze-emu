@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["SliceVec","A Vector using a slice for backing storage (passed in at creation time)."]]});

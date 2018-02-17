@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Ppu` struct in crate `breeze_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Ppu">
+
+    <title>breeze_core::ppu::Ppu - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct Ppu</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.framebuf">framebuf</a><a href="#structfield.oam">oam</a><a href="#structfield.cgram">cgram</a><a href="#structfield.vram">vram</a><a href="#structfield.can_latch_counters">can_latch_counters</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.lookup_bg_color">lookup_bg_color</a><a href="#method.obj_size">obj_size</a><a href="#method.bg_mode">bg_mode</a><a href="#method.render_pixel">render_pixel</a><a href="#method.read_chr_entry">read_chr_entry</a><a href="#method.inidisp">inidisp</a><a href="#method.obsel">obsel</a><a href="#method.bgmode">bgmode</a><a href="#method.mosaic">mosaic</a><a href="#method.bg1sc">bg1sc</a><a href="#method.bg2sc">bg2sc</a><a href="#method.bg3sc">bg3sc</a><a href="#method.bg4sc">bg4sc</a><a href="#method.bg12nba">bg12nba</a><a href="#method.bg34nba">bg34nba</a><a href="#method.vmain">vmain</a><a href="#method.m7sel">m7sel</a><a href="#method.w12sel">w12sel</a><a href="#method.w34sel">w34sel</a><a href="#method.wobjsel">wobjsel</a><a href="#method.wh0">wh0</a><a href="#method.wh1">wh1</a><a href="#method.wh2">wh2</a><a href="#method.wh3">wh3</a><a href="#method.wbglog">wbglog</a><a href="#method.wobjlog">wobjlog</a><a href="#method.tm">tm</a><a href="#method.ts">ts</a><a href="#method.tmw">tmw</a><a href="#method.tsw">tsw</a><a href="#method.cgwsel">cgwsel</a><a href="#method.cgadsub">cgadsub</a><a href="#method.coldata_r">coldata_r</a><a href="#method.coldata_g">coldata_g</a><a href="#method.coldata_b">coldata_b</a><a href="#method.setini">setini</a><a href="#method.bg1hofs">bg1hofs</a><a href="#method.m7hofs">m7hofs</a><a href="#method.bg1vofs">bg1vofs</a><a href="#method.m7vofs">m7vofs</a><a href="#method.bg2hofs">bg2hofs</a><a href="#method.bg2vofs">bg2vofs</a><a href="#method.bg3hofs">bg3hofs</a><a href="#method.bg3vofs">bg3vofs</a><a href="#method.bg4hofs">bg4hofs</a><a href="#method.bg4vofs">bg4vofs</a><a href="#method.m7a">m7a</a><a href="#method.m7b">m7b</a><a href="#method.m7c">m7c</a><a href="#method.m7d">m7d</a><a href="#method.m7x">m7x</a><a href="#method.m7y">m7y</a><a href="#method.collect_sprite_data_for_scanline">collect_sprite_data_for_scanline</a><a href="#method.maybe_draw_sprite_pixel">maybe_draw_sprite_pixel</a><a href="#method.load">load</a><a href="#method.store">store</a><a href="#method.latch_counters">latch_counters</a><a href="#method.update">update</a><a href="#method.in_h_blank">in_h_blank</a><a href="#method.in_v_blank">in_v_blank</a><a href="#method.forced_blank">forced_blank</a><a href="#method.h_counter">h_counter</a><a href="#method.v_counter">v_counter</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Default">Default</a><a href="#impl-SaveState">SaveState</a></div></div><p class='location'><a href='../index.html'>breeze_core</a>::<wbr><a href='index.html'>ppu</a></p><script>window.sidebarCurrent = {name: 'Ppu', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>breeze_core</a>::<wbr><a href='index.html'>ppu</a>::<wbr><a class="struct" href=''>Ppu</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#33-417' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Ppu {
+    pub framebuf: <a class="struct" href="../../breeze_core/ppu/struct.FrameBuf.html" title="struct breeze_core::ppu::FrameBuf">FrameBuf</a>,
+    pub oam: <a class="struct" href="../../breeze_core/ppu/oam/struct.Oam.html" title="struct breeze_core::ppu::oam::Oam">Oam</a>,
+    pub cgram: <a class="struct" href="../../breeze_core/ppu/cgram/struct.Cgram.html" title="struct breeze_core::ppu::cgram::Cgram">Cgram</a>,
+    pub vram: <a class="struct" href="../../breeze_core/ppu/struct.Vram.html" title="struct breeze_core::ppu::Vram">Vram</a>,
+    pub can_latch_counters: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    // some fields omitted
+}</pre><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.framebuf" class="structfield small-section-header">
+                           <a href="#structfield.framebuf" class="anchor field"></a>
+                           <span id="framebuf.v" class='invisible'>
+                           <code>framebuf: <a class="struct" href="../../breeze_core/ppu/struct.FrameBuf.html" title="struct breeze_core::ppu::FrameBuf">FrameBuf</a></code>
+                           </span></span><div class='docblock'><p>PPU frame buffer. Contains raw RGB pixel data in <code>RGB24</code> format: The first byte is the red
+component of the pixel in the top left corner of the frame, the second byte is the green
+component and the third byte is the blue component. The fourth byte is then the red
+component of the second pixel (at coordinate <code>(1,0)</code>), and so on.</p>
+</div><span id="structfield.oam" class="structfield small-section-header">
+                           <a href="#structfield.oam" class="anchor field"></a>
+                           <span id="oam.v" class='invisible'>
+                           <code>oam: <a class="struct" href="../../breeze_core/ppu/oam/struct.Oam.html" title="struct breeze_core::ppu::oam::Oam">Oam</a></code>
+                           </span></span><div class='docblock'><p>Object Attribute Memory</p>
+
+<p>The first 512 Bytes contain 4 Bytes per sprite (for a maximum of 128 simultaneous on-screen
+sprites). The remaining 32 Bytes contain additional 2 bits per sprite.</p>
+
+<p>Layout of an OAM entry (4 Bytes) in the first 512 Bytes:
+* <code>xxxxxxxx</code> - Low 8 bits of <strong>X</strong> coordinate of the sprite (top left corner?)
+* <code>yyyyyyyy</code> - <strong>Y</strong> coordinate
+* <code>tttttttt</code> - Starting <strong>t</strong>ile/character number (low 8 bits)
+* <code>vhoopppt</code> - <strong>V</strong>ertical/**H**orizontal flip, Pri**o**rity bits, <strong>P</strong>alette number,
+  Bit 9 (most significant bit) of starting <strong>t</strong>ile number.</p>
+
+<p>Layout of a byte in the last 32 Bytes of OAM:
+<code>sxsxsxsx</code> - <strong>S</strong>ize toggle bit and most significant bit of <strong>X</strong> coordinate
+The low bits contain the information for sprites with low IDs.</p>
+</div><span id="structfield.cgram" class="structfield small-section-header">
+                           <a href="#structfield.cgram" class="anchor field"></a>
+                           <span id="cgram.v" class='invisible'>
+                           <code>cgram: <a class="struct" href="../../breeze_core/ppu/cgram/struct.Cgram.html" title="struct breeze_core::ppu::cgram::Cgram">Cgram</a></code>
+                           </span></span><div class='docblock'><p>CGRAM - Stores the color palette</p>
+
+<p>There are 256 colors in the palette, each 15 bits (5 bits per color channel), represented
+by 2 Bytes of CGRAM. Layout (16-bit big endian value - high byte and high address first):
+<code>?bbbbbgg</code> <code>gggrrrrr</code> (the <code>?</code>-bit is ignored)</p>
+</div><span id="structfield.vram" class="structfield small-section-header">
+                           <a href="#structfield.vram" class="anchor field"></a>
+                           <span id="vram.v" class='invisible'>
+                           <code>vram: <a class="struct" href="../../breeze_core/ppu/struct.Vram.html" title="struct breeze_core::ppu::Vram">Vram</a></code>
+                           </span></span><div class='docblock'><p>VRAM - Stores background maps and tile/character data</p>
+
+<p>The location of background maps can be selected with the registers <code>$2107-$210A</code>. An entry
+in these maps looks like this:</p>
+
+<p><code>vhopppcc</code> <code>cccccccc</code>
+* <strong>V</strong>ertical/**H**orizontal flip
+* Pri**o**rity bit
+* <strong>P</strong>alette number
+* <strong>C</strong>haracter/Tile starting number</p>
+
+<p>Character data locations are set with the registers <code>$210B</code> (BG1/2) and <code>$210C</code> (BG3/4).</p>
+</div><span id="structfield.can_latch_counters" class="structfield small-section-header">
+                           <a href="#structfield.can_latch_counters" class="anchor field"></a>
+                           <span id="can_latch_counters.v" class='invisible'>
+                           <code>can_latch_counters: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>Set by the emulator on writes to <code>$4201</code>: When bit 7 of <code>$4201</code> is 0, no latching can occur</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/bg.rs.html#103-436' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.lookup_bg_color' class="method"><span id='lookup_bg_color.v' class='invisible'><code>pub fn <a href='#method.lookup_bg_color' class='fnname'>lookup_bg_color</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;bg_num: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;prio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;subscreen: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../../breeze_core/ppu/struct.SnesRgb.html" title="struct breeze_core::ppu::SnesRgb">SnesRgb</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/bg.rs.html#407-435' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Main entry point into the BG layer renderer.</p>
+
+<p>Lookup the color of the given background layer (1-4) at the current pixel, using the given
+priority (0-1) only. This will also scroll backgrounds accordingly.</p>
+
+<p>This may only be called with BG layer numbers which are actually valid in the current BG
+mode (the renderer code makes sure that this is the case).</p>
+
+<p>Returns <code>None</code> if the pixel is transparent, <code>Some(SnesRgb)</code> otherwise.</p>
+</div></div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/rendering.rs.html#91-423' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Rendering</p>
+</div><div class='impl-items'><h4 id='method.obj_size' class="method"><span id='obj_size.v' class='invisible'><code>pub fn <a href='#method.obj_size' class='fnname'>obj_size</a>(&amp;self, size_toggle: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/rendering.rs.html#94-107' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Get the configured sprite size in pixels. If <code>size_toggle</code> is <code>false</code>, gets the size of
+small sprites, otherwise gets the size of large sprites (OAM size bit set).</p>
+</div><h4 id='method.bg_mode' class="method"><span id='bg_mode.v' class='invisible'><code>pub fn <a href='#method.bg_mode' class='fnname'>bg_mode</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/rendering.rs.html#110' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the active BG mode (0-7).</p>
+</div><h4 id='method.render_pixel' class="method"><span id='render_pixel.v' class='invisible'><code>pub fn <a href='#method.render_pixel' class='fnname'>render_pixel</a>(&amp;mut self) -&gt; <a class="struct" href="../../breeze_core/ppu/struct.Rgb.html" title="struct breeze_core::ppu::Rgb">Rgb</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/rendering.rs.html#297-368' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Main rendering entry point. Renders the current pixel and returns its color. Assumes that
+the current pixel is on the screen.</p>
+</div><h4 id='method.read_chr_entry' class="method"><span id='read_chr_entry.v' class='invisible'><code>pub fn <a href='#method.read_chr_entry' class='fnname'>read_chr_entry</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;bitplane_count: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;start_addr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;tile_size: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;(x, y): <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;(vflip, hflip): <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a><br>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/rendering.rs.html#379-405' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Reads character data for a pixel and returns the palette index stored in the bitplanes.</p>
+
+<h1 id='parameters' class='section-header'><a href='#parameters'>Parameters</a></h1>
+<ul>
+<li><code>bitplane_count</code>: Number of bitplanes (must be even)</li>
+<li><code>start_addr</code>: Address of the first bitplane (or the first 2)</li>
+<li><code>tile_size</code>: 8 or 16</li>
+<li><code>(x, y)</code>: Offset inside the tile (<code>0-7</code> or <code>0-15</code>, depending on the tile size)</li>
+<li><code>(vflip, hflip)</code>: Flip this tile vertically (top and down are flipped) or horizontally
+(left and right are flipped)</li>
+</ul>
+</div></div><h3 id='impl-2' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code><a href='#impl-2' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#12-16' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.inidisp' class="method"><span id='inidisp.v' class='invisible'><code>pub fn <a href='#method.inidisp' class='fnname'>inidisp</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.obsel' class="method"><span id='obsel.v' class='invisible'><code>pub fn <a href='#method.obsel' class='fnname'>obsel</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bgmode' class="method"><span id='bgmode.v' class='invisible'><code>pub fn <a href='#method.bgmode' class='fnname'>bgmode</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.mosaic' class="method"><span id='mosaic.v' class='invisible'><code>pub fn <a href='#method.mosaic' class='fnname'>mosaic</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg1sc' class="method"><span id='bg1sc.v' class='invisible'><code>pub fn <a href='#method.bg1sc' class='fnname'>bg1sc</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg2sc' class="method"><span id='bg2sc.v' class='invisible'><code>pub fn <a href='#method.bg2sc' class='fnname'>bg2sc</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg3sc' class="method"><span id='bg3sc.v' class='invisible'><code>pub fn <a href='#method.bg3sc' class='fnname'>bg3sc</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg4sc' class="method"><span id='bg4sc.v' class='invisible'><code>pub fn <a href='#method.bg4sc' class='fnname'>bg4sc</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg12nba' class="method"><span id='bg12nba.v' class='invisible'><code>pub fn <a href='#method.bg12nba' class='fnname'>bg12nba</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg34nba' class="method"><span id='bg34nba.v' class='invisible'><code>pub fn <a href='#method.bg34nba' class='fnname'>bg34nba</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.vmain' class="method"><span id='vmain.v' class='invisible'><code>pub fn <a href='#method.vmain' class='fnname'>vmain</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7sel' class="method"><span id='m7sel.v' class='invisible'><code>pub fn <a href='#method.m7sel' class='fnname'>m7sel</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.w12sel' class="method"><span id='w12sel.v' class='invisible'><code>pub fn <a href='#method.w12sel' class='fnname'>w12sel</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.w34sel' class="method"><span id='w34sel.v' class='invisible'><code>pub fn <a href='#method.w34sel' class='fnname'>w34sel</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.wobjsel' class="method"><span id='wobjsel.v' class='invisible'><code>pub fn <a href='#method.wobjsel' class='fnname'>wobjsel</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.wh0' class="method"><span id='wh0.v' class='invisible'><code>pub fn <a href='#method.wh0' class='fnname'>wh0</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.wh1' class="method"><span id='wh1.v' class='invisible'><code>pub fn <a href='#method.wh1' class='fnname'>wh1</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.wh2' class="method"><span id='wh2.v' class='invisible'><code>pub fn <a href='#method.wh2' class='fnname'>wh2</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.wh3' class="method"><span id='wh3.v' class='invisible'><code>pub fn <a href='#method.wh3' class='fnname'>wh3</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.wbglog' class="method"><span id='wbglog.v' class='invisible'><code>pub fn <a href='#method.wbglog' class='fnname'>wbglog</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.wobjlog' class="method"><span id='wobjlog.v' class='invisible'><code>pub fn <a href='#method.wobjlog' class='fnname'>wobjlog</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.tm' class="method"><span id='tm.v' class='invisible'><code>pub fn <a href='#method.tm' class='fnname'>tm</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.ts' class="method"><span id='ts.v' class='invisible'><code>pub fn <a href='#method.ts' class='fnname'>ts</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.tmw' class="method"><span id='tmw.v' class='invisible'><code>pub fn <a href='#method.tmw' class='fnname'>tmw</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.tsw' class="method"><span id='tsw.v' class='invisible'><code>pub fn <a href='#method.tsw' class='fnname'>tsw</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.cgwsel' class="method"><span id='cgwsel.v' class='invisible'><code>pub fn <a href='#method.cgwsel' class='fnname'>cgwsel</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.cgadsub' class="method"><span id='cgadsub.v' class='invisible'><code>pub fn <a href='#method.cgadsub' class='fnname'>cgadsub</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.coldata_r' class="method"><span id='coldata_r.v' class='invisible'><code>pub fn <a href='#method.coldata_r' class='fnname'>coldata_r</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.coldata_g' class="method"><span id='coldata_g.v' class='invisible'><code>pub fn <a href='#method.coldata_g' class='fnname'>coldata_g</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.coldata_b' class="method"><span id='coldata_b.v' class='invisible'><code>pub fn <a href='#method.coldata_b' class='fnname'>coldata_b</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.setini' class="method"><span id='setini.v' class='invisible'><code>pub fn <a href='#method.setini' class='fnname'>setini</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#14' title='goto source code'>[src]</a></span></h4>
+</div><h3 id='impl-3' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code><a href='#impl-3' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#22-26' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.bg1hofs' class="method"><span id='bg1hofs.v' class='invisible'><code>pub fn <a href='#method.bg1hofs' class='fnname'>bg1hofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7hofs' class="method"><span id='m7hofs.v' class='invisible'><code>pub fn <a href='#method.m7hofs' class='fnname'>m7hofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg1vofs' class="method"><span id='bg1vofs.v' class='invisible'><code>pub fn <a href='#method.bg1vofs' class='fnname'>bg1vofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7vofs' class="method"><span id='m7vofs.v' class='invisible'><code>pub fn <a href='#method.m7vofs' class='fnname'>m7vofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg2hofs' class="method"><span id='bg2hofs.v' class='invisible'><code>pub fn <a href='#method.bg2hofs' class='fnname'>bg2hofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg2vofs' class="method"><span id='bg2vofs.v' class='invisible'><code>pub fn <a href='#method.bg2vofs' class='fnname'>bg2vofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg3hofs' class="method"><span id='bg3hofs.v' class='invisible'><code>pub fn <a href='#method.bg3hofs' class='fnname'>bg3hofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg3vofs' class="method"><span id='bg3vofs.v' class='invisible'><code>pub fn <a href='#method.bg3vofs' class='fnname'>bg3vofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg4hofs' class="method"><span id='bg4hofs.v' class='invisible'><code>pub fn <a href='#method.bg4hofs' class='fnname'>bg4hofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bg4vofs' class="method"><span id='bg4vofs.v' class='invisible'><code>pub fn <a href='#method.bg4vofs' class='fnname'>bg4vofs</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7a' class="method"><span id='m7a.v' class='invisible'><code>pub fn <a href='#method.m7a' class='fnname'>m7a</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7b' class="method"><span id='m7b.v' class='invisible'><code>pub fn <a href='#method.m7b' class='fnname'>m7b</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7c' class="method"><span id='m7c.v' class='invisible'><code>pub fn <a href='#method.m7c' class='fnname'>m7c</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7d' class="method"><span id='m7d.v' class='invisible'><code>pub fn <a href='#method.m7d' class='fnname'>m7d</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7x' class="method"><span id='m7x.v' class='invisible'><code>pub fn <a href='#method.m7x' class='fnname'>m7x</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.m7y' class="method"><span id='m7y.v' class='invisible'><code>pub fn <a href='#method.m7y' class='fnname'>m7y</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/regs.rs.html#24' title='goto source code'>[src]</a></span></h4>
+</div><h3 id='impl-4' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code><a href='#impl-4' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/sprites.rs.html#57-255' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.collect_sprite_data_for_scanline' class="method"><span id='collect_sprite_data_for_scanline.v' class='invisible'><code>pub fn <a href='#method.collect_sprite_data_for_scanline' class='fnname'>collect_sprite_data_for_scanline</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/sprites.rs.html#61-189' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Collects visible sprites and sprite tiles for the current scanline.</p>
+
+<p>Called when rendering the first pixel on a scanline.</p>
+</div><h4 id='method.maybe_draw_sprite_pixel' class="method"><span id='maybe_draw_sprite_pixel.v' class='invisible'><code>pub fn <a href='#method.maybe_draw_sprite_pixel' class='fnname'>maybe_draw_sprite_pixel</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;prio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;subscreen: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="../../breeze_core/ppu/struct.SnesRgb.html" title="struct breeze_core::ppu::SnesRgb">SnesRgb</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/sprites.rs.html#241-254' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the value of the current pixel on the sprite layer if it has the given priority
+(and <code>None</code> otherwise).</p>
+
+<p>Returns the pixel&#39;s color and whether the sprite uses palette 0-3 (if this is the case, the
+sprite can not participate in color math - it is fixed to opaque).</p>
+</div></div><h3 id='impl-5' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code><a href='#impl-5' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#431-788' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.load' class="method"><span id='load.v' class='invisible'><code>pub fn <a href='#method.load' class='fnname'>load</a>(&amp;mut self, addr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#433-479' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Load a PPU register (addresses <code>$2134</code> to <code>$213f</code>)</p>
+</div><h4 id='method.store' class="method"><span id='store.v' class='invisible'><code>pub fn <a href='#method.store' class='fnname'>store</a>(&amp;mut self, addr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>, value: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#482-574' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Store a byte in a PPU register (addresses <code>$2100</code> - <code>$2133</code>)</p>
+</div><h4 id='method.latch_counters' class="method"><span id='latch_counters.v' class='invisible'><code>pub fn <a href='#method.latch_counters' class='fnname'>latch_counters</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#577-585' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Latches the H/V counters if <code>$4201</code> bit 7 is set (otherwise, no latching can occur)</p>
+</div><h4 id='method.update' class="method"><span id='update.v' class='invisible'><code>pub fn <a href='#method.update' class='fnname'>update</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#591-618' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Runs the PPU for a bit.</p>
+
+<p>This will render exactly one pixel (when in H/V-Blank, the pixel counter will be
+incremented, but obviously nothing will be drawn).</p>
+</div><h4 id='method.in_h_blank' class="method"><span id='in_h_blank.v' class='invisible'><code>pub fn <a href='#method.in_h_blank' class='fnname'>in_h_blank</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#620' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.in_v_blank' class="method"><span id='in_v_blank.v' class='invisible'><code>pub fn <a href='#method.in_v_blank' class='fnname'>in_v_blank</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#622' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.forced_blank' class="method"><span id='forced_blank.v' class='invisible'><code>pub fn <a href='#method.forced_blank' class='fnname'>forced_blank</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#623' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.h_counter' class="method"><span id='h_counter.v' class='invisible'><code>pub fn <a href='#method.h_counter' class='fnname'>h_counter</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#627' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the current X position</p>
+</div><h4 id='method.v_counter' class="method"><span id='v_counter.v' class='invisible'><code>pub fn <a href='#method.v_counter' class='fnname'>v_counter</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#629' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the current Y position (scanline)</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#32' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/ppu/mod.rs.html#32' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div><h3 id='impl-SaveState' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../libsavestate/trait.SaveState.html" title="trait libsavestate::SaveState">SaveState</a> for <a class="struct" href="../../breeze_core/ppu/struct.Ppu.html" title="struct breeze_core::ppu::Ppu">Ppu</a></code><a href='#impl-SaveState' class='anchor'></a></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.save_state' class="method"><span id='save_state.v' class='invisible'><code>fn <a href='../../libsavestate/trait.SaveState.html#tymethod.save_state' class='fnname'>save_state</a>&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a> + ?<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>&gt;(&amp;self, w: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span></h4>
+<h4 id='method.restore_state' class="method"><span id='restore_state.v' class='invisible'><code>fn <a href='../../libsavestate/trait.SaveState.html#tymethod.restore_state' class='fnname'>restore_state</a>&lt;R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a> + ?<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>&gt;(&amp;mut self, r: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>R) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "breeze_core";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

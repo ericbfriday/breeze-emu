@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Renderer` trait in crate `breeze_backend`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Renderer">
+
+    <title>breeze_backend::Renderer - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc trait">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Trait Renderer</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.create">create</a><a href="#tymethod.render">render</a><a href="#tymethod.set_rom_title">set_rom_title</a></div><a class="sidebar-title" href="#foreign-impls">Implementations on Foreign Types</a><div class="sidebar-links"><a href="#impl-Renderer">Box&lt;T&gt;</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>breeze_backend</a></p><script>window.sidebarCurrent = {name: 'Renderer', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>breeze_backend</a>::<wbr><a class="trait" href=''>Renderer</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/breeze_backend/lib.rs.html#27-47' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Renderer {
+    fn <a href='#tymethod.create' class='fnname'>create</a>() -&gt; <a class="type" href="../breeze_backend/type.BackendResult.html" title="type breeze_backend::BackendResult">BackendResult</a>&lt;Self&gt;<br>&nbsp;&nbsp;&nbsp; <span class="where">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Self: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a></span>;
+<div class='item-spacer'></div>    fn <a href='#tymethod.render' class='fnname'>render</a>(&amp;mut self, frame_data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="../breeze_backend/type.BackendResult.html" title="type breeze_backend::BackendResult">BackendResult</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../breeze_backend/enum.BackendAction.html" title="enum breeze_backend::BackendAction">BackendAction</a>&gt;&gt;;
+<div class='item-spacer'></div>    fn <a href='#tymethod.set_rom_title' class='fnname'>set_rom_title</a>(&amp;mut self, title: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>);
+}</pre><div class='docblock'><p>Trait for screen renderers. Once per frame, they are given the raw screen data produced by the
+PPU and can then render this content in a backend-specific way.</p>
+</div>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
+            <div class='methods'>
+        <h3 id='tymethod.create' class='method'><span id='create.v' class='invisible'><code>fn <a href='#tymethod.create' class='fnname'>create</a>() -&gt; <a class="type" href="../breeze_backend/type.BackendResult.html" title="type breeze_backend::BackendResult">BackendResult</a>&lt;Self&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,&nbsp;</span></code></span></h3><div class='docblock'><p>Creates a new renderer.</p>
+</div><h3 id='tymethod.render' class='method'><span id='render.v' class='invisible'><code>fn <a href='#tymethod.render' class='fnname'>render</a>(&amp;mut self, frame_data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="../breeze_backend/type.BackendResult.html" title="type breeze_backend::BackendResult">BackendResult</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../breeze_backend/enum.BackendAction.html" title="enum breeze_backend::BackendAction">BackendAction</a>&gt;&gt;</code></span></h3><div class='docblock'><p>Render a frame produced by the PPU. For optimal experience, the <code>Renderer</code> implementation
+should make sure that the frame is visible as soon as possible.</p>
+
+<p>The passed <code>frame_data</code> contains <code>RGB24</code> data: For each pixel, R, G and B values are stored
+in order, one byte per channel, then for the next pixel (left to right, top line to bottom
+line).</p>
+
+<p>The renderer is also responsible for timing: It should only return to the caller when
+another frame should be rendered. This also affects input latency: As soon as the <code>render</code>
+method returns, the input devices can be queried by the running program. This allows
+intricate timing mechanisms for better input latency and makes support for dynamic refresh
+easier. If the renderer returns immediately, the emulator will run at maximum speed.</p>
+</div><h3 id='tymethod.set_rom_title' class='method'><span id='set_rom_title.v' class='invisible'><code>fn <a href='#tymethod.set_rom_title' class='fnname'>set_rom_title</a>(&amp;mut self, title: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>)</code></span></h3><div class='docblock'><p>Set the ROM title. This usually sets the window title.</p>
+</div></div>
+                <h2 id='foreign-impls' class='small-section-header'>
+                  Implementations on Foreign Types<a href='#foreign-impls' class='anchor'></a>
+                </h2>
+            <h3 id='impl-Renderer' class='impl'><span class='in-band'><code>impl&lt;T:&nbsp;<a class="trait" href="../breeze_backend/trait.Renderer.html" title="trait breeze_backend::Renderer">Renderer</a> + ?<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>&gt; <a class="trait" href="../breeze_backend/trait.Renderer.html" title="trait breeze_backend::Renderer">Renderer</a> for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;T&gt;</code><a href='#impl-Renderer' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/breeze_backend/lib.rs.html#50-62' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.create' class="method"><span id='create.v-1' class='invisible'><code>fn <a href='#method.create' class='fnname'>create</a>() -&gt; <a class="type" href="../breeze_backend/type.BackendResult.html" title="type breeze_backend::BackendResult">BackendResult</a>&lt;Self&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/breeze_backend/lib.rs.html#51-53' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.render' class="method"><span id='render.v-1' class='invisible'><code>fn <a href='#method.render' class='fnname'>render</a>(&amp;mut self, frame_data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="../breeze_backend/type.BackendResult.html" title="type breeze_backend::BackendResult">BackendResult</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../breeze_backend/enum.BackendAction.html" title="enum breeze_backend::BackendAction">BackendAction</a>&gt;&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/breeze_backend/lib.rs.html#55-57' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.set_rom_title' class="method"><span id='set_rom_title.v-1' class='invisible'><code>fn <a href='#method.set_rom_title' class='fnname'>set_rom_title</a>(&amp;mut self, title: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/breeze_backend/lib.rs.html#59-61' title='goto source code'>[src]</a></span></h4>
+</div></span>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><div class='out-of-band'><a class='srclink' href='../src/breeze_backend/dummy.rs.html#17-31' title='goto source code'>[src]</a></div><code>impl Renderer for <a class="struct" href="../breeze_backend/dummy/struct.DummyRenderer.html" title="struct breeze_backend::dummy::DummyRenderer">DummyRenderer</a></code></li>
+</ul><script type="text/javascript" async
+                         src="../implementors/breeze_backend/trait.Renderer.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "breeze_backend";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

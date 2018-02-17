@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `JoypadButton` enum in crate `breeze_backend`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, JoypadButton">
+
+    <title>breeze_backend::input::joypad::JoypadButton - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc enum">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Enum JoypadButton</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.A">A</a><a href="#variant.B">B</a><a href="#variant.X">X</a><a href="#variant.Y">Y</a><a href="#variant.L">L</a><a href="#variant.R">R</a><a href="#variant.Start">Start</a><a href="#variant.Select">Select</a><a href="#variant.Up">Up</a><a href="#variant.Left">Left</a><a href="#variant.Down">Down</a><a href="#variant.Right">Right</a></div></div><p class='location'><a href='../../index.html'>breeze_backend</a>::<wbr><a href='../index.html'>input</a>::<wbr><a href='index.html'>joypad</a></p><script>window.sidebarCurrent = {name: 'JoypadButton', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../../index.html'>breeze_backend</a>::<wbr><a href='../index.html'>input</a>::<wbr><a href='index.html'>joypad</a>::<wbr><a class="enum" href=''>JoypadButton</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/breeze_backend/input/joypad.rs.html#10-23' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum JoypadButton {
+    A,
+    B,
+    X,
+    Y,
+    L,
+    R,
+    Start,
+    Select,
+    Up,
+    Left,
+    Down,
+    Right,
+}</pre><div class='docblock'><p>(C-like) Enum of all Joypad buttons.</p>
+
+<p>Discriminants are the button&#39;s bit numbers in <code>JoypadState</code> (the highest number will be read
+first).</p>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id="variant.A" class="variant small-section-header"><a href="#variant.A" class="anchor field"></a><span id='A.v' class='invisible'><code>A</code></span></span><span id="variant.B" class="variant small-section-header"><a href="#variant.B" class="anchor field"></a><span id='B.v' class='invisible'><code>B</code></span></span><span id="variant.X" class="variant small-section-header"><a href="#variant.X" class="anchor field"></a><span id='X.v' class='invisible'><code>X</code></span></span><span id="variant.Y" class="variant small-section-header"><a href="#variant.Y" class="anchor field"></a><span id='Y.v' class='invisible'><code>Y</code></span></span><span id="variant.L" class="variant small-section-header"><a href="#variant.L" class="anchor field"></a><span id='L.v' class='invisible'><code>L</code></span></span><span id="variant.R" class="variant small-section-header"><a href="#variant.R" class="anchor field"></a><span id='R.v' class='invisible'><code>R</code></span></span><span id="variant.Start" class="variant small-section-header"><a href="#variant.Start" class="anchor field"></a><span id='Start.v' class='invisible'><code>Start</code></span></span><span id="variant.Select" class="variant small-section-header"><a href="#variant.Select" class="anchor field"></a><span id='Select.v' class='invisible'><code>Select</code></span></span><span id="variant.Up" class="variant small-section-header"><a href="#variant.Up" class="anchor field"></a><span id='Up.v' class='invisible'><code>Up</code></span></span><span id="variant.Left" class="variant small-section-header"><a href="#variant.Left" class="anchor field"></a><span id='Left.v' class='invisible'><code>Left</code></span></span><span id="variant.Down" class="variant small-section-header"><a href="#variant.Down" class="anchor field"></a><span id='Down.v' class='invisible'><code>Down</code></span></span><span id="variant.Right" class="variant small-section-header"><a href="#variant.Right" class="anchor field"></a><span id='Right.v' class='invisible'><code>Right</code></span></span></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "breeze_backend";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

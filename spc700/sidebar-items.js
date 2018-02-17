@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Spc700","The SPC700 is an 8-bit processor with a 16-bit address space."]]});

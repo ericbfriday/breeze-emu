@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Emulator` struct in crate `breeze_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Emulator">
+
+    <title>breeze_core::snes::Emulator - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct Emulator</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.renderer">renderer</a><a href="#structfield.audio">audio</a><a href="#structfield.snes">snes</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.peripherals">peripherals</a><a href="#method.peripherals_mut">peripherals_mut</a><a href="#method.handle_action">handle_action</a><a href="#method.render_frame">render_frame</a><a href="#method.run">run</a></div></div><p class='location'><a href='../index.html'>breeze_core</a>::<wbr><a href='index.html'>snes</a></p><script>window.sidebarCurrent = {name: 'Emulator', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>breeze_core</a>::<wbr><a href='index.html'>snes</a>::<wbr><a class="struct" href=''>Emulator</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/breeze_core/snes.rs.html#481-489' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Emulator&lt;R:&nbsp;<a class="trait" href="../../breeze_backend/trait.Renderer.html" title="trait breeze_backend::Renderer">Renderer</a>, A:&nbsp;<a class="trait" href="../../breeze_backend/trait.AudioSink.html" title="trait breeze_backend::AudioSink">AudioSink</a>&gt; {
+    pub renderer: R,
+    pub audio: A,
+    pub snes: <a class="struct" href="../../breeze_core/snes/struct.Snes.html" title="struct breeze_core::snes::Snes">Snes</a>,
+    // some fields omitted
+}</pre><div class='docblock'><p>The emulator.</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.renderer" class="structfield small-section-header">
+                           <a href="#structfield.renderer" class="anchor field"></a>
+                           <span id="renderer.v" class='invisible'>
+                           <code>renderer: R</code>
+                           </span></span><div class='docblock'><p>The renderer this emulator instance uses to display the screen</p>
+</div><span id="structfield.audio" class="structfield small-section-header">
+                           <a href="#structfield.audio" class="anchor field"></a>
+                           <span id="audio.v" class='invisible'>
+                           <code>audio: A</code>
+                           </span></span><div class='docblock'><p>The audio sink to be used for APU output</p>
+</div><span id="structfield.snes" class="structfield small-section-header">
+                           <a href="#structfield.snes" class="anchor field"></a>
+                           <span id="snes.v" class='invisible'>
+                           <code>snes: <a class="struct" href="../../breeze_core/snes/struct.Snes.html" title="struct breeze_core::snes::Snes">Snes</a></code>
+                           </span></span>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class="trait" href="../../breeze_backend/trait.Renderer.html" title="trait breeze_backend::Renderer">Renderer</a>, A:&nbsp;<a class="trait" href="../../breeze_backend/trait.AudioSink.html" title="trait breeze_backend::AudioSink">AudioSink</a>&gt; <a class="struct" href="../../breeze_core/snes/struct.Emulator.html" title="struct breeze_core::snes::Emulator">Emulator</a>&lt;R, A&gt;</code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/snes.rs.html#491-583' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(rom: <a class="struct" href="../../breeze_core/rom/struct.Rom.html" title="struct breeze_core::rom::Rom">Rom</a>, renderer: R, audio: A) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/snes.rs.html#495-525' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new emulator instance from a loaded ROM and a renderer.</p>
+
+<p>This will also create a default <code>Input</code> instance without any attached peripherals.</p>
+</div><h4 id='method.peripherals' class="method"><span id='peripherals.v' class='invisible'><code>pub fn <a href='#method.peripherals' class='fnname'>peripherals</a>(&amp;self) -&gt; &amp;<a class="struct" href="../../breeze_core/snes/struct.Peripherals.html" title="struct breeze_core::snes::Peripherals">Peripherals</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/snes.rs.html#528' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Get a reference to the <code>Peripherals</code> instance</p>
+</div><h4 id='method.peripherals_mut' class="method"><span id='peripherals_mut.v' class='invisible'><code>pub fn <a href='#method.peripherals_mut' class='fnname'>peripherals_mut</a>(&amp;mut self) -&gt; &amp;mut <a class="struct" href="../../breeze_core/snes/struct.Peripherals.html" title="struct breeze_core::snes::Peripherals">Peripherals</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/snes.rs.html#531' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Get a mutable reference to the <code>Peripherals</code> instance</p>
+</div><h4 id='method.handle_action' class="method"><span id='handle_action.v' class='invisible'><code>pub fn <a href='#method.handle_action' class='fnname'>handle_action</a>(&amp;mut self, action: <a class="enum" href="../../breeze_backend/enum.BackendAction.html" title="enum breeze_backend::BackendAction">BackendAction</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/snes.rs.html#534-556' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Handles a <code>BackendAction</code>. Returns <code>true</code> if the emulator should exit.</p>
+</div><h4 id='method.render_frame' class="method"><span id='render_frame.v' class='invisible'><code>pub fn <a href='#method.render_frame' class='fnname'>render_frame</a>(&amp;mut self) -&gt; <a class="type" href="../../breeze_backend/type.BackendResult.html" title="type breeze_backend::BackendResult">BackendResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/snes.rs.html#562-573' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Runs emulation until a frame is completed, renders the frame and handles an action dictated
+by the backend.</p>
+
+<p>Returns <code>true</code> if the backend requested an exit, <code>false</code> otherwise.</p>
+</div><h4 id='method.run' class="method"><span id='run.v' class='invisible'><code>pub fn <a href='#method.run' class='fnname'>run</a>(&amp;mut self) -&gt; <a class="type" href="../../breeze_backend/type.BackendResult.html" title="type breeze_backend::BackendResult">BackendResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/snes.rs.html#579-582' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Runs the emulator in a loop</p>
+
+<p>This will emulate the system and render frames until the backend signals that the emulator
+should exit.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "breeze_core";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

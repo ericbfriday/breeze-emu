@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="Source to the Rust file `ppu/mod.rs`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang">
+
+    <title>mod.rs.html -- source</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc source">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<span id="2">  2</span>
+<span id="3">  3</span>
+<span id="4">  4</span>
+<span id="5">  5</span>
+<span id="6">  6</span>
+<span id="7">  7</span>
+<span id="8">  8</span>
+<span id="9">  9</span>
+<span id="10"> 10</span>
+<span id="11"> 11</span>
+<span id="12"> 12</span>
+<span id="13"> 13</span>
+<span id="14"> 14</span>
+<span id="15"> 15</span>
+<span id="16"> 16</span>
+<span id="17"> 17</span>
+<span id="18"> 18</span>
+<span id="19"> 19</span>
+<span id="20"> 20</span>
+<span id="21"> 21</span>
+<span id="22"> 22</span>
+<span id="23"> 23</span>
+<span id="24"> 24</span>
+<span id="25"> 25</span>
+<span id="26"> 26</span>
+<span id="27"> 27</span>
+<span id="28"> 28</span>
+<span id="29"> 29</span>
+<span id="30"> 30</span>
+<span id="31"> 31</span>
+<span id="32"> 32</span>
+<span id="33"> 33</span>
+<span id="34"> 34</span>
+<span id="35"> 35</span>
+<span id="36"> 36</span>
+<span id="37"> 37</span>
+<span id="38"> 38</span>
+<span id="39"> 39</span>
+<span id="40"> 40</span>
+<span id="41"> 41</span>
+<span id="42"> 42</span>
+<span id="43"> 43</span>
+<span id="44"> 44</span>
+<span id="45"> 45</span>
+<span id="46"> 46</span>
+<span id="47"> 47</span>
+<span id="48"> 48</span>
+<span id="49"> 49</span>
+<span id="50"> 50</span>
+<span id="51"> 51</span>
+<span id="52"> 52</span>
+<span id="53"> 53</span>
+<span id="54"> 54</span>
+<span id="55"> 55</span>
+<span id="56"> 56</span>
+<span id="57"> 57</span>
+<span id="58"> 58</span>
+<span id="59"> 59</span>
+<span id="60"> 60</span>
+<span id="61"> 61</span>
+<span id="62"> 62</span>
+<span id="63"> 63</span>
+<span id="64"> 64</span>
+<span id="65"> 65</span>
+<span id="66"> 66</span>
+<span id="67"> 67</span>
+<span id="68"> 68</span>
+<span id="69"> 69</span>
+<span id="70"> 70</span>
+<span id="71"> 71</span>
+<span id="72"> 72</span>
+<span id="73"> 73</span>
+<span id="74"> 74</span>
+<span id="75"> 75</span>
+<span id="76"> 76</span>
+<span id="77"> 77</span>
+<span id="78"> 78</span>
+<span id="79"> 79</span>
+<span id="80"> 80</span>
+<span id="81"> 81</span>
+<span id="82"> 82</span>
+<span id="83"> 83</span>
+<span id="84"> 84</span>
+<span id="85"> 85</span>
+<span id="86"> 86</span>
+<span id="87"> 87</span>
+<span id="88"> 88</span>
+<span id="89"> 89</span>
+<span id="90"> 90</span>
+<span id="91"> 91</span>
+<span id="92"> 92</span>
+<span id="93"> 93</span>
+<span id="94"> 94</span>
+<span id="95"> 95</span>
+<span id="96"> 96</span>
+<span id="97"> 97</span>
+<span id="98"> 98</span>
+<span id="99"> 99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
+<span id="676">676</span>
+<span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
+<span id="708">708</span>
+<span id="709">709</span>
+<span id="710">710</span>
+<span id="711">711</span>
+<span id="712">712</span>
+<span id="713">713</span>
+<span id="714">714</span>
+<span id="715">715</span>
+<span id="716">716</span>
+<span id="717">717</span>
+<span id="718">718</span>
+<span id="719">719</span>
+<span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Emulates the Picture Processing Unit.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! We emulate the NTSC console, which has a refresh rate of 60 Hz and a screen resolution of</span>
+<span class="doccomment">//! 256x224 pixels by default.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Documentation mostly taken from http://emu-docs.org/Super%20NES/General/snesdoc.html and</span>
+<span class="doccomment">//! http://wiki.superfamicom.org/</span>
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">cgram</span>;
+<span class="kw">mod</span> <span class="ident">bg</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">oam</span>;
+<span class="kw">mod</span> <span class="ident">rendering</span>;
+<span class="kw">mod</span> <span class="ident">regs</span>;
+<span class="kw">mod</span> <span class="ident">rgb</span>;
+<span class="kw">mod</span> <span class="ident">sprites</span>;
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">rgb</span>::{<span class="ident">Rgb</span>, <span class="ident">SnesRgb</span>};
+
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">sprites</span>::<span class="ident">SpriteRenderState</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">bg</span>::<span class="ident">BgCache</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">oam</span>::<span class="ident">Oam</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">cgram</span>::<span class="ident">Cgram</span>;
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">breeze_backend</span>::<span class="ident">ppu</span>::{<span class="ident">SCREEN_HEIGHT</span>, <span class="ident">SCREEN_WIDTH</span>};
+
+<span class="doccomment">/// VRAM size in Bytes</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VRAM_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">64</span> <span class="op">*</span> <span class="number">1024</span>;
+<span class="kw">const</span> <span class="ident">FRAME_BUF_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">SCREEN_WIDTH</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">SCREEN_HEIGHT</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="number">3</span>;
+<span class="macro">byte_array</span><span class="macro">!</span>(<span class="kw">pub</span> <span class="ident">Vram</span>[<span class="ident">VRAM_SIZE</span>] <span class="ident">with</span> <span class="ident">u16</span> <span class="ident">indexing</span>, <span class="ident">save</span> <span class="ident">state</span> <span class="ident">please</span>);
+<span class="macro">byte_array</span><span class="macro">!</span>(<span class="kw">pub</span> <span class="ident">FrameBuf</span>[<span class="ident">FRAME_BUF_SIZE</span>]);
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Ppu</span> {
+    <span class="doccomment">/// PPU frame buffer. Contains raw RGB pixel data in `RGB24` format: The first byte is the red</span>
+    <span class="doccomment">/// component of the pixel in the top left corner of the frame, the second byte is the green</span>
+    <span class="doccomment">/// component and the third byte is the blue component. The fourth byte is then the red</span>
+    <span class="doccomment">/// component of the second pixel (at coordinate `(1,0)`), and so on.</span>
+    <span class="doccomment">///</span>
+    <span class="comment">// FIXME The size can change depending on the PPU config, make sure all frames fit in</span>
+    <span class="comment">// FIXME How would this work in high resolution modes?</span>
+    <span class="kw">pub</span> <span class="ident">framebuf</span>: <span class="ident">FrameBuf</span>,
+
+    <span class="doccomment">/// Opaque state object used by the render code. This value may change between frames/scanlines</span>
+    <span class="doccomment">/// and is used as a cache between pixels.</span>
+    <span class="ident">sprite_render_state</span>: <span class="ident">SpriteRenderState</span>,
+
+    <span class="doccomment">/// Cache for faster background rendering</span>
+    <span class="ident">bg_cache</span>: <span class="ident">BgCache</span>,
+
+    <span class="doccomment">/// Object Attribute Memory</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The first 512 Bytes contain 4 Bytes per sprite (for a maximum of 128 simultaneous on-screen</span>
+    <span class="doccomment">/// sprites). The remaining 32 Bytes contain additional 2 bits per sprite.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Layout of an OAM entry (4 Bytes) in the first 512 Bytes:</span>
+    <span class="doccomment">/// * `xxxxxxxx` - Low 8 bits of **X** coordinate of the sprite (top left corner?)</span>
+    <span class="doccomment">/// * `yyyyyyyy` - **Y** coordinate</span>
+    <span class="doccomment">/// * `tttttttt` - Starting **t**ile/character number (low 8 bits)</span>
+    <span class="doccomment">/// * `vhoopppt` - **V**ertical/**H**orizontal flip, Pri**o**rity bits, **P**alette number,</span>
+    <span class="doccomment">///   Bit 9 (most significant bit) of starting **t**ile number.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Layout of a byte in the last 32 Bytes of OAM:</span>
+    <span class="doccomment">/// `sxsxsxsx` - **S**ize toggle bit and most significant bit of **X** coordinate</span>
+    <span class="doccomment">/// The low bits contain the information for sprites with low IDs.</span>
+    <span class="kw">pub</span> <span class="ident">oam</span>: <span class="ident">Oam</span>,
+
+    <span class="doccomment">/// CGRAM - Stores the color palette</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// There are 256 colors in the palette, each 15 bits (5 bits per color channel), represented</span>
+    <span class="doccomment">/// by 2 Bytes of CGRAM. Layout (16-bit big endian value - high byte and high address first):</span>
+    <span class="doccomment">/// `?bbbbbgg` `gggrrrrr` (the `?`-bit is ignored)</span>
+    <span class="kw">pub</span> <span class="ident">cgram</span>: <span class="ident">Cgram</span>,
+
+    <span class="doccomment">/// VRAM - Stores background maps and tile/character data</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The location of background maps can be selected with the registers `$2107-$210A`. An entry</span>
+    <span class="doccomment">/// in these maps looks like this:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `vhopppcc` `cccccccc`</span>
+    <span class="doccomment">/// * **V**ertical/**H**orizontal flip</span>
+    <span class="doccomment">/// * Pri**o**rity bit</span>
+    <span class="doccomment">/// * **P**alette number</span>
+    <span class="doccomment">/// * **C**haracter/Tile starting number</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Character data locations are set with the registers `$210B` (BG1/2) and `$210C` (BG3/4).</span>
+    <span class="kw">pub</span> <span class="ident">vram</span>: <span class="ident">Vram</span>,
+
+    <span class="doccomment">/// Scanline counter</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// &quot;The SNES runs 1 scanline every 1364 master cycles, except in non-interlace mode scanline</span>
+    <span class="doccomment">/// $f0 of every other frame (those with $213f.7=1) is only 1360 cycles. Frames are 262</span>
+    <span class="doccomment">/// scanlines in non-interlace mode, while in interlace mode frames with $213f.7=0 are 263</span>
+    <span class="doccomment">/// scanlines. V-Blank runs from either scanline $e1 or $f0 until the end of the frame.&quot;</span>
+    <span class="ident">scanline</span>: <span class="ident">u16</span>,
+
+    <span class="doccomment">/// Horizontal pixel counter</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Each call of the `update` method will advance this counter by exactly 1. Since the</span>
+    <span class="doccomment">/// horizontal resolution of a frame is 256 pixels, H-Blank is started at `x=256`, or the 257th</span>
+    <span class="doccomment">/// pixel. The last X coordinate in H-Blank is `x=339`. At the end of the `update` call (during</span>
+    <span class="doccomment">/// which `x=339`), `x` will be reset to 0 and `scanline` will be incremented.</span>
+    <span class="ident">x</span>: <span class="ident">u16</span>,
+
+    <span class="doccomment">/// `$2100` - Screen Display register</span>
+    <span class="doccomment">/// `x---bbbb`</span>
+    <span class="doccomment">/// * `x`: Force blank (F-Blank)</span>
+    <span class="doccomment">/// * `b`: Brightness (0=black, 15=max)</span>
+    <span class="ident">inidisp</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2101` - Object Size and Name Base Address</span>
+    <span class="doccomment">/// `sssnnbbb`</span>
+    <span class="doccomment">/// * `sss`: Object/Sprite size</span>
+    <span class="doccomment">///  * 000 =  8x8  and 16x16 sprites</span>
+    <span class="doccomment">///  * 001 =  8x8  and 32x32 sprites</span>
+    <span class="doccomment">///  * 010 =  8x8  and 64x64 sprites</span>
+    <span class="doccomment">///  * 011 = 16x16 and 32x32 sprites</span>
+    <span class="doccomment">///  * 100 = 16x16 and 64x64 sprites</span>
+    <span class="doccomment">///  * 101 = 32x32 and 64x64 sprites</span>
+    <span class="doccomment">///  * 110 = 16x32 and 32x64 sprites (&#39;undocumented&#39;)</span>
+    <span class="doccomment">///  * 111 = 16x32 and 32x32 sprites (&#39;undocumented&#39;)</span>
+    <span class="doccomment">/// * `nn`: Name select - Offset between sprite/name tables</span>
+    <span class="doccomment">/// * `bbb`: Address select of first sprite/name table</span>
+    <span class="ident">obsel</span>: <span class="ident">u8</span>,
+
+    <span class="doccomment">/// `$2102` Low byte of current OAM word address (&quot;reload value&quot;)</span>
+    <span class="ident">oamaddl</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2103` High bit (bit 9) of OAM word address and priority rotation bit</span>
+    <span class="doccomment">/// `p------b`</span>
+    <span class="doccomment">/// * `p`: If set, give priority to sprite `(OAMAddr&amp;0xFE)&gt;&gt;1` (internal OAM address)</span>
+    <span class="doccomment">/// * `b`: High bit of OAM word address (&quot;reload value&quot;)</span>
+    <span class="ident">oamaddh</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// Internal OAM address register (10 bit)</span>
+    <span class="ident">oamaddr</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// Byte written to the LSB of the current OAM address</span>
+    <span class="ident">oam_lsb</span>: <span class="ident">u8</span>,
+
+    <span class="doccomment">/// `$2105` BG mode and character size</span>
+    <span class="doccomment">/// `4321emmm`</span>
+    <span class="doccomment">/// * `4321`: Use 16x16 tiles for BG**4**/**3**/**2**/**1** (if possible in this mode)</span>
+    <span class="doccomment">/// * `e`: Mode 1 BG3 priority bit. If set, BG3 tiles with priority 1 have the highest</span>
+    <span class="doccomment">///   priority. If not set, these tiles have the third lowest priority (and end up between</span>
+    <span class="doccomment">///   sprites with priority 0 and 1).</span>
+    <span class="doccomment">/// * `mmm`: BG mode</span>
+    <span class="ident">bgmode</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2106` Mosaic filter</span>
+    <span class="doccomment">/// `xxxx4321`</span>
+    <span class="doccomment">/// * `4321`: Enable mosaic filter for BG4/3/2/1</span>
+    <span class="doccomment">/// * `xxxx`: Mosaic size in pixels (`0`: 1 pixel (default), `F`: 16 pixels)</span>
+    <span class="ident">mosaic</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2107`-`$210a` BGx Tilemap Address and Size</span>
+    <span class="doccomment">/// `aaaaaayx`</span>
+    <span class="doccomment">/// * `a`: VRAM address is `aaaaaa &lt;&lt; 10`</span>
+    <span class="doccomment">/// * `y`: Vertical mirroring off (when 0, the bottom tile maps are mirrored from the top)</span>
+    <span class="doccomment">/// * `x`: Horizontal mirroring off (when 0, the right tile maps are mirrored from the left)</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The value of `yx` defines the number of 32x32 tilemaps used (1, 2 or 4) as well as their</span>
+    <span class="doccomment">/// layout:</span>
+    <span class="doccomment">///     00  32x32   AA</span>
+    <span class="doccomment">///                 AA</span>
+    <span class="doccomment">///     01  64x32   AB</span>
+    <span class="doccomment">///                 AB</span>
+    <span class="doccomment">///     10  32x64   AA</span>
+    <span class="doccomment">///                 BB</span>
+    <span class="doccomment">///     11  64x64   AB</span>
+    <span class="doccomment">///                 CD</span>
+    <span class="doccomment">/// FIXME Is this mirroring stuff correct? It&#39;s confusing as hell!</span>
+    <span class="ident">bg1sc</span>: <span class="ident">u8</span>,
+    <span class="ident">bg2sc</span>: <span class="ident">u8</span>,
+    <span class="ident">bg3sc</span>: <span class="ident">u8</span>,
+    <span class="ident">bg4sc</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$210b` BG1/2 Character Data Address</span>
+    <span class="doccomment">/// `bbbbaaaa`</span>
+    <span class="doccomment">/// * `b`: Base address for BG2 is `bbbb &lt;&lt; 12`</span>
+    <span class="doccomment">/// * `a`: Base address for BG1 is `aaaa &lt;&lt; 12`</span>
+    <span class="ident">bg12nba</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$210c` BG3/4 Character Data Address</span>
+    <span class="doccomment">/// `bbbbaaaa`</span>
+    <span class="doccomment">/// * `b`: Base address for BG4 is `bbbb &lt;&lt; 12`</span>
+    <span class="doccomment">/// * `a`: Base address for BG3 is `aaaa &lt;&lt; 12`</span>
+    <span class="ident">bg34nba</span>: <span class="ident">u8</span>,
+
+    <span class="doccomment">/// `$210d` BG1 Horizontal Scroll</span>
+    <span class="doccomment">/// BG1 offset is 10 bits</span>
+    <span class="ident">bg1hofs</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$210d` Mode 7 BG Horizontal Scroll</span>
+    <span class="doccomment">/// 13 bits signed. Updated via the same register as `BG1HOFS`, but using the `m7_old`</span>
+    <span class="doccomment">/// mechanism, which works differently than the `bg_old` mechanism below.</span>
+    <span class="ident">m7hofs</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$210e` BG1 Vertical Scroll</span>
+    <span class="ident">bg1vofs</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$210e` Mode 7 BG Vertical Scroll</span>
+    <span class="ident">m7vofs</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$210f` BG2 Horizontal Scroll</span>
+    <span class="ident">bg2hofs</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$2110` BG2 Vertical Scroll</span>
+    <span class="ident">bg2vofs</span>: <span class="ident">u16</span>,
+    <span class="ident">bg3hofs</span>: <span class="ident">u16</span>,
+    <span class="ident">bg3vofs</span>: <span class="ident">u16</span>,
+    <span class="ident">bg4hofs</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$2114`</span>
+    <span class="ident">bg4vofs</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// BG registers are 16-bit &quot;write-twice&quot; registers. Their value is updated as follows</span>
+    <span class="doccomment">/// (assuming `VAL` is the value written to the register):</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// BGnHOFS = (VAL&lt;&lt;8) | (bg_old&amp;~7) | ((BGnHOFS&gt;&gt;8)&amp;7);</span>
+    <span class="doccomment">/// bg_old = VAL;</span>
+    <span class="doccomment">///    or</span>
+    <span class="doccomment">/// BGnVOFS = (VAL&lt;&lt;8) | bg_old;</span>
+    <span class="doccomment">/// bg_old = VAL;</span>
+    <span class="doccomment">/// ```</span>
+    <span class="ident">bg_old</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// Mode 7 16-bit &quot;write-twice&quot; registers are updated like this:</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// m7_reg = new * 100h + m7_old</span>
+    <span class="doccomment">/// m7_old = new</span>
+    <span class="doccomment">/// ```</span>
+    <span class="ident">m7_old</span>: <span class="ident">u8</span>,
+
+    <span class="doccomment">/// `$2115` Video Port Control (VRAM)</span>
+    <span class="doccomment">/// `j---mmii`</span>
+    <span class="doccomment">/// * `j`: Address increment mode</span>
+    <span class="doccomment">///  * 0 = increment after writing `$2118`/reading `$2139`</span>
+    <span class="doccomment">///  * 1 = increment after writing `$2119`/reading `$213a`</span>
+    <span class="doccomment">/// * `m`: VRAM Address remapping</span>
+    <span class="doccomment">///  * 00 = None</span>
+    <span class="doccomment">///  * 01 = Remap addressing aaaaaaaaBBBccccc =&gt; aaaaaaaacccccBBB</span>
+    <span class="doccomment">///  * 10 = Remap addressing aaaaaaaBBBcccccc =&gt; aaaaaaaccccccBBB</span>
+    <span class="doccomment">///  * 11 = Remap addressing aaaaaaBBBccccccc =&gt; aaaaaacccccccBBB</span>
+    <span class="doccomment">/// * `i`: Word address increment amount (00 =&gt; 1, 01 =&gt; 32, 10/11 =&gt; 128)</span>
+    <span class="ident">vmain</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2116`/`$2117` Low/High byte of VRAM word address</span>
+    <span class="ident">vmaddr</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// VRAM read prefetch register</span>
+    <span class="ident">vram_prefetch</span>: <span class="ident">u16</span>,
+
+    <span class="doccomment">/// `$211a` Mode 7 Settings</span>
+    <span class="doccomment">/// `rc----xy`</span>
+    <span class="doccomment">/// * `r`: Playing field size (`0` = 1024x1024, `1` = uhh... larger?)</span>
+    <span class="doccomment">/// * `c`: 0 = Empty space is transparent, 1 = Fill empty space with character 0</span>
+    <span class="doccomment">/// * `x`: Horizontal mirroring</span>
+    <span class="doccomment">/// * `y`: Vertical mirroring</span>
+    <span class="ident">m7sel</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$211b` Mode 7 Matrix A</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The mode 7 matrix transformation works like this (where `SX/SY` are the current screen</span>
+    <span class="doccomment">/// coordinates and `X/Y` the resulting playing field coordinates that will be looked up):</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// [ X ]   [ A B ]   [ SX + M7HOFS - M7X ]   [ M7X ]</span>
+    <span class="doccomment">/// [   ] = [     ] * [                   ] + [     ]</span>
+    <span class="doccomment">/// [ Y ]   [ C D ]   [ SY + M7VOFS - M7Y ]   [ M7Y ]</span>
+    <span class="doccomment">/// ```</span>
+    <span class="ident">m7a</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$211c` Mode 7 Matrix B</span>
+    <span class="ident">m7b</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// Last value written to `m7b` / `$211c`</span>
+    <span class="ident">m7b_last</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$211d` Mode 7 Matrix C</span>
+    <span class="ident">m7c</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$211e` Mode 7 Matrix D</span>
+    <span class="ident">m7d</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$211f` Mode 7 Center X</span>
+    <span class="ident">m7x</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// `$2120` Mode 7 Center Y</span>
+    <span class="ident">m7y</span>: <span class="ident">u16</span>,
+
+    <span class="doccomment">/// `$2121` CGRAM word address (=color index)</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Automatically incremented after two writes to `$2122`.</span>
+    <span class="ident">cgadd</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// Store the low byte to write to the current CGRAM position after the high byte is written by</span>
+    <span class="doccomment">/// the CPU (writes are always done in pairs - like the low 512 bytes of OAM).</span>
+    <span class="ident">cg_low_buf</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+
+    <span class="doccomment">/// `$2123` Window Mask Settings for BG1 and BG2</span>
+    <span class="doccomment">/// `ABCDabcd`</span>
+    <span class="doccomment">/// * `A`: Enable window 2 for BG2</span>
+    <span class="doccomment">/// * `B`: Invert window 2 for BG2</span>
+    <span class="doccomment">/// * `C`: Enable window 1 for BG2</span>
+    <span class="doccomment">/// * `D`: Invert window 1 for BG2</span>
+    <span class="doccomment">/// * `a`: Enable window 2 for BG1</span>
+    <span class="doccomment">/// * `b`: Invert window 2 for BG1</span>
+    <span class="doccomment">/// * `c`: Enable window 1 for BG1</span>
+    <span class="doccomment">/// * `d`: Invert window 1 for BG1</span>
+    <span class="ident">w12sel</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2124` Window Mask Settings for BG3 and BG4</span>
+    <span class="doccomment">/// `ABCDabcd`</span>
+    <span class="doccomment">/// * `A`: Enable window 2 for BG4</span>
+    <span class="doccomment">/// * `B`: Invert window 2 for BG4</span>
+    <span class="doccomment">/// * `C`: Enable window 1 for BG4</span>
+    <span class="doccomment">/// * `D`: Invert window 1 for BG4</span>
+    <span class="doccomment">/// * `a`: Enable window 2 for BG3</span>
+    <span class="doccomment">/// * `b`: Invert window 2 for BG3</span>
+    <span class="doccomment">/// * `c`: Enable window 1 for BG3</span>
+    <span class="doccomment">/// * `d`: Invert window 1 for BG3</span>
+    <span class="ident">w34sel</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2125` Window Mask Settings for OBJ and Color Window</span>
+    <span class="doccomment">/// `ABCDabcd`</span>
+    <span class="doccomment">/// * `A`: Enable window 2 for Color</span>
+    <span class="doccomment">/// * `B`: Invert window 2 for Color</span>
+    <span class="doccomment">/// * `C`: Enable window 1 for Color</span>
+    <span class="doccomment">/// * `D`: Invert window 1 for Color</span>
+    <span class="doccomment">/// * `a`: Enable window 2 for OBJ</span>
+    <span class="doccomment">/// * `b`: Invert window 2 for OBJ</span>
+    <span class="doccomment">/// * `c`: Enable window 1 for OBJ</span>
+    <span class="doccomment">/// * `d`: Invert window 1 for OBJ</span>
+    <span class="ident">wobjsel</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2126` Window 1 Left Position</span>
+    <span class="doccomment">/// (this should really be called W1L)</span>
+    <span class="doccomment">/// * `0`: Leftmost</span>
+    <span class="doccomment">/// * `255`: Rightmost</span>
+    <span class="ident">wh0</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2127` Window 1 Right Position</span>
+    <span class="ident">wh1</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2128` Window 2 Left Position</span>
+    <span class="ident">wh2</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2129` Window 2 Right Position</span>
+    <span class="ident">wh3</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$212a` BG Window mask logic</span>
+    <span class="doccomment">/// `44332211`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `$212b` OBJ/Color Window mask logic</span>
+    <span class="doccomment">/// `----ccoo`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The 2 bits can select the boolean operator to apply:</span>
+    <span class="doccomment">/// * `00 = OR`</span>
+    <span class="doccomment">/// * `01 = AND`</span>
+    <span class="doccomment">/// * `10 = XOR`</span>
+    <span class="doccomment">/// * `11 = XNOR`</span>
+    <span class="ident">wbglog</span>: <span class="ident">u8</span>,
+    <span class="ident">wobjlog</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$212c`/`$212d` Enable layers on main/sub screen</span>
+    <span class="doccomment">/// `---o4321`</span>
+    <span class="doccomment">/// **O**BJ layer, BG**4**/**3**/**2**/**1**</span>
+    <span class="ident">tm</span>: <span class="ident">u8</span>,
+    <span class="ident">ts</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$212e`/`$212f` Enable window masking on main/sub screen</span>
+    <span class="doccomment">/// `---o4321`</span>
+    <span class="doccomment">/// **O**BJ layer, BG**4**/**3**/**2**/**1**</span>
+    <span class="ident">tmw</span>: <span class="ident">u8</span>,
+    <span class="ident">tsw</span>: <span class="ident">u8</span>,
+
+    <span class="doccomment">/// `$2130` Color Addition Select</span>
+    <span class="doccomment">/// `ccmm--sd`</span>
+    <span class="doccomment">/// * `cc`: Clip colors to black before math</span>
+    <span class="doccomment">///  * `00`: Never</span>
+    <span class="doccomment">///  * `01`: Outside Color Window</span>
+    <span class="doccomment">///  * `10`: Inside Color Window</span>
+    <span class="doccomment">///  * `11`: Always</span>
+    <span class="doccomment">/// * `mm`: Prevent color math (same meaning as `cc`)</span>
+    <span class="doccomment">/// * `s`: Add subscreen pixel instead of fixed color</span>
+    <span class="doccomment">/// * `d`: Direct color mode for 256-color BGs</span>
+    <span class="ident">cgwsel</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// `$2131` Color math</span>
+    <span class="doccomment">/// `shbo4321`</span>
+    <span class="doccomment">/// * `s`: 0 = Add, 1 = Subtract</span>
+    <span class="doccomment">/// * `h`: Enable half-color math (the result of color math is divided by 2, in most cases)</span>
+    <span class="doccomment">/// * `bo4321`: Enable color math on **B**ackdrop, **O**BJ, BG4/3/2/1</span>
+    <span class="ident">cgadsub</span>: <span class="ident">u8</span>,
+
+    <span class="doccomment">/// `$2132` COLDATA: Fixed color data</span>
+    <span class="doccomment">/// Each write can set 0-3 color planes (RGB), so we store them separately, which makes things</span>
+    <span class="doccomment">/// easier.</span>
+    <span class="ident">coldata_r</span>: <span class="ident">u8</span>,
+    <span class="ident">coldata_g</span>: <span class="ident">u8</span>,
+    <span class="ident">coldata_b</span>: <span class="ident">u8</span>,
+
+    <span class="doccomment">/// `$2133` Screen Mode/Video Select</span>
+    <span class="doccomment">/// `se--poIi`</span>
+    <span class="doccomment">/// * `s`: &quot;External Sync&quot; (should always be 0)</span>
+    <span class="doccomment">/// * `e`: Allows enabling BG2 in mode 7</span>
+    <span class="doccomment">/// * `p`: Pseudo-Hires</span>
+    <span class="doccomment">/// * `o`: If set, 239 lines are rendered instead of 224. This changes the V-Blank timing.</span>
+    <span class="doccomment">/// * `I`: OBJ interlace</span>
+    <span class="doccomment">/// * `i`: Screen interlace. Doubles the effective screen height.</span>
+    <span class="ident">setini</span>: <span class="ident">u8</span>,
+
+    <span class="doccomment">/// `$213c` Latched H-Counter value</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// FIXME: I&#39;m pretty sure that our notion of H/V position heavily diverges from what the SNES</span>
+    <span class="doccomment">/// actually does, so these are probably always a bit off</span>
+    <span class="doccomment">/// FIXME: There might also be a delay involved when latching</span>
+    <span class="ident">ophct</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// If `true`, the next read of `$213c`/OPHCT will return the high byte/bit. If `false`, the low</span>
+    <span class="doccomment">/// byte will be read.</span>
+    <span class="ident">ophct_high</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// `$213d` Latched V-Counter value</span>
+    <span class="ident">opvct</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// If `true`, the next read of `$213d`/OPVCT will return the high byte/bit. If `false`, the low</span>
+    <span class="doccomment">/// byte will be read.</span>
+    <span class="ident">opvct_high</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Set by the emulator on writes to `$4201`: When bit 7 of `$4201` is 0, no latching can occur</span>
+    <span class="kw">pub</span> <span class="ident">can_latch_counters</span>: <span class="ident">bool</span>,
+
+    <span class="doccomment">/// `$213e`: STAT77 - PPU status flags and version</span>
+    <span class="doccomment">/// `trm-vvvv`</span>
+    <span class="doccomment">/// * `t`: Time Over Flag</span>
+    <span class="doccomment">/// * `r`: Range Over Flag</span>
+    <span class="doccomment">/// * `m`: Master/slave mode select</span>
+    <span class="doccomment">/// * `-`: PPU1 open bus</span>
+    <span class="doccomment">/// * `vvvv`: 5c77 chip version number. So far, we&#39;ve only encountered version 1.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that `time_over` and `range_over` are set even if the OBJ layer is disabled.</span>
+    <span class="ident">time_over</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// `r` flag of STAT77 / `$213e` (see `time_over`)</span>
+    <span class="ident">range_over</span>: <span class="ident">bool</span>,
+
+    <span class="doccomment">/// `$213f`: STAT78 - PPU status flag and version</span>
+    <span class="doccomment">/// `fl-pvvvv`</span>
+    <span class="doccomment">/// * `f`: Interlace Field. Toggles every V-Blank (FIXME: When exactly?)</span>
+    <span class="doccomment">/// * `l`: External latch flag.</span>
+    <span class="doccomment">/// * `p`: PAL Mode (0=NTSC).</span>
+    <span class="doccomment">/// * `vvvv`: 5C78 chip version number. We&#39;ve encountered at least 2 and 3. Possibly 1 as well.</span>
+    <span class="ident">interlace_field</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// `l` flag of STAT78 / `$213f` (see `interlace_field`).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Reset on read if `$4201` bit 7 is set.</span>
+    <span class="ident">ext_latch</span>: <span class="ident">bool</span>,
+}
+
+<span class="macro">impl_save_state</span><span class="macro">!</span>(<span class="ident">Ppu</span> {
+    <span class="ident">oam</span>, <span class="ident">cgram</span>, <span class="ident">vram</span>, <span class="ident">inidisp</span>, <span class="ident">obsel</span>, <span class="ident">oamaddl</span>, <span class="ident">oamaddh</span>, <span class="ident">oamaddr</span>, <span class="ident">oam_lsb</span>, <span class="ident">bgmode</span>, <span class="ident">mosaic</span>, <span class="ident">bg1sc</span>,
+    <span class="ident">bg2sc</span>, <span class="ident">bg3sc</span>, <span class="ident">bg4sc</span>, <span class="ident">bg12nba</span>, <span class="ident">bg34nba</span>, <span class="ident">bg1hofs</span>, <span class="ident">m7hofs</span>, <span class="ident">bg1vofs</span>, <span class="ident">m7vofs</span>, <span class="ident">bg2hofs</span>, <span class="ident">bg2vofs</span>,
+    <span class="ident">bg3hofs</span>, <span class="ident">bg3vofs</span>, <span class="ident">bg4hofs</span>, <span class="ident">bg4vofs</span>, <span class="ident">bg_old</span>, <span class="ident">m7_old</span>, <span class="ident">vmain</span>, <span class="ident">vmaddr</span>, <span class="ident">vram_prefetch</span>, <span class="ident">m7sel</span>, <span class="ident">m7a</span>,
+    <span class="ident">m7b</span>, <span class="ident">m7b_last</span>, <span class="ident">m7c</span>, <span class="ident">m7d</span>, <span class="ident">m7x</span>, <span class="ident">m7y</span>, <span class="ident">cgadd</span>, <span class="ident">cg_low_buf</span>, <span class="ident">w12sel</span>, <span class="ident">w34sel</span>, <span class="ident">wobjsel</span>, <span class="ident">wh0</span>, <span class="ident">wh1</span>, <span class="ident">wh2</span>,
+    <span class="ident">wh3</span>, <span class="ident">wbglog</span>, <span class="ident">wobjlog</span>, <span class="ident">tm</span>, <span class="ident">ts</span>, <span class="ident">tmw</span>, <span class="ident">tsw</span>, <span class="ident">cgwsel</span>, <span class="ident">cgadsub</span>, <span class="ident">coldata_r</span>, <span class="ident">coldata_g</span>, <span class="ident">coldata_b</span>,
+    <span class="ident">setini</span>, <span class="ident">ophct</span>, <span class="ident">ophct_high</span>, <span class="ident">opvct</span>, <span class="ident">opvct_high</span>, <span class="ident">can_latch_counters</span>, <span class="ident">scanline</span>, <span class="ident">x</span>, <span class="ident">time_over</span>,
+    <span class="ident">range_over</span>, <span class="ident">interlace_field</span>, <span class="ident">ext_latch</span>
+} <span class="ident">ignore</span> {
+    <span class="ident">framebuf</span>, <span class="ident">sprite_render_state</span>, <span class="ident">bg_cache</span>
+});
+
+<span class="kw">impl</span> <span class="ident">Ppu</span> {
+    <span class="doccomment">/// Load a PPU register (addresses `$2134` to `$213f`)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">load</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">addr</span>: <span class="ident">u16</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="kw">match</span> <span class="ident">addr</span> {
+            <span class="comment">// `$2134` - `$2136`: Multiplication Result of `self.m7a * self.m7b_last`</span>
+            <span class="comment">// MPYL - Low Byte</span>
+            <span class="number">0x2134</span> <span class="op">=&gt;</span> (<span class="self">self</span>.<span class="ident">m7a</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">m7b_last</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="kw">as</span> <span class="ident">u8</span>,
+            <span class="comment">// MPYM - Middle Byte</span>
+            <span class="number">0x2135</span> <span class="op">=&gt;</span> ((<span class="self">self</span>.<span class="ident">m7a</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">m7b_last</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&gt;&gt;</span> <span class="number">8</span>) <span class="kw">as</span> <span class="ident">u8</span>,
+            <span class="comment">// MPYH - High Byte</span>
+            <span class="number">0x2136</span> <span class="op">=&gt;</span> ((<span class="self">self</span>.<span class="ident">m7a</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">m7b_last</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&gt;&gt;</span> <span class="number">16</span>) <span class="kw">as</span> <span class="ident">u8</span>,
+            <span class="number">0x2137</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">latch_counters</span>();
+                <span class="number">0</span>   <span class="comment">// FIXME The data read is open bus, which isn&#39;t yet emulated</span>
+            }
+            <span class="comment">// RDOAM</span>
+            <span class="number">0x2138</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">oam_load</span>(),
+            <span class="number">0x2139</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">vram_load_low</span>(),
+            <span class="number">0x213a</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">vram_load_high</span>(),
+            <span class="comment">// OPHCT</span>
+            <span class="number">0x213c</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ophct_high</span> { (<span class="self">self</span>.<span class="ident">ophct</span> <span class="op">&gt;&gt;</span> <span class="number">8</span>) <span class="kw">as</span> <span class="ident">u8</span> } <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">ophct</span> <span class="kw">as</span> <span class="ident">u8</span>};
+                <span class="self">self</span>.<span class="ident">ophct_high</span> <span class="op">=</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">ophct_high</span>;
+                <span class="ident">value</span>
+            }
+            <span class="comment">// OPVCT</span>
+            <span class="number">0x213d</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">opvct_high</span> { (<span class="self">self</span>.<span class="ident">opvct</span> <span class="op">&gt;&gt;</span> <span class="number">8</span>) <span class="kw">as</span> <span class="ident">u8</span> } <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">opvct</span> <span class="kw">as</span> <span class="ident">u8</span>};
+                <span class="self">self</span>.<span class="ident">opvct_high</span> <span class="op">=</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">opvct_high</span>;
+                <span class="ident">value</span>
+            }
+            <span class="number">0x213e</span> <span class="op">=&gt;</span> {
+                (<span class="kw">if</span> <span class="self">self</span>.<span class="ident">time_over</span> { <span class="number">0x80</span> } <span class="kw">else</span> { <span class="number">0x00</span> })
+                <span class="op">|</span> (<span class="kw">if</span> <span class="self">self</span>.<span class="ident">range_over</span> { <span class="number">0x40</span> } <span class="kw">else</span> { <span class="number">0x00</span> })
+                <span class="op">|</span> <span class="number">0x01</span>
+            }
+            <span class="number">0x213f</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">interlace</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">interlace_field</span> { <span class="number">0x80</span> } <span class="kw">else</span> { <span class="number">0x00</span> };
+                <span class="kw">let</span> <span class="ident">latch</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ext_latch</span> { <span class="number">0x40</span> } <span class="kw">else</span> { <span class="number">0x00</span> };
+
+                <span class="self">self</span>.<span class="ident">ophct_high</span> <span class="op">=</span> <span class="bool-val">false</span>;
+                <span class="self">self</span>.<span class="ident">opvct_high</span> <span class="op">=</span> <span class="bool-val">false</span>;
+
+                <span class="comment">// FIXME Does PAL/NTSC have significance? Or the version we return?</span>
+                <span class="ident">interlace</span> <span class="op">|</span> <span class="ident">latch</span> <span class="op">|</span> <span class="number">0x02</span>
+            }
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid/unimplemented PPU load from ${:04X}&quot;</span>, <span class="ident">addr</span>),
+        }
+    }
+
+    <span class="doccomment">/// Store a byte in a PPU register (addresses `$2100` - `$2133`)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">store</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">addr</span>: <span class="ident">u16</span>, <span class="ident">value</span>: <span class="ident">u8</span>) {
+        <span class="kw">match</span> <span class="ident">addr</span> {
+            <span class="number">0x2100</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">inidisp</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2101</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">obsel</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2102</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">oamaddl</span> <span class="op">=</span> <span class="ident">value</span>;
+                <span class="self">self</span>.<span class="ident">update_oam_addr</span>();
+            }
+            <span class="number">0x2103</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">oamaddh</span> <span class="op">=</span> <span class="ident">value</span>;
+                <span class="self">self</span>.<span class="ident">update_oam_addr</span>();
+            }
+            <span class="number">0x2104</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">oam_store</span>(<span class="ident">value</span>),
+            <span class="number">0x2105</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">bgmode</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2106</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">mosaic</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2107</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">bg1sc</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2108</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">bg2sc</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2109</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">bg3sc</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x210a</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">bg4sc</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x210b</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">bg12nba</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x210c</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">bg34nba</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x210d</span> <span class="op">|</span> <span class="number">0x210e</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">bg_store</span>(<span class="ident">addr</span>, <span class="ident">value</span>);
+                <span class="self">self</span>.<span class="ident">m7_store</span>(<span class="ident">addr</span>, <span class="ident">value</span>);
+            }
+            <span class="number">0x210f</span> ... <span class="number">0x2114</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">bg_store</span>(<span class="ident">addr</span>, <span class="ident">value</span>),
+            <span class="number">0x2115</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">vmain</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2116</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">&amp;</span> <span class="number">0xff00</span>) <span class="op">|</span> <span class="ident">value</span> <span class="kw">as</span> <span class="ident">u16</span>,
+            <span class="number">0x2117</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">=</span> ((<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="op">&lt;&lt;</span> <span class="number">8</span>) <span class="op">|</span> <span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">&amp;</span> <span class="number">0xff</span>,
+            <span class="number">0x2118</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">vram_store_low</span>(<span class="ident">value</span>),
+            <span class="number">0x2119</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">vram_store_high</span>(<span class="ident">value</span>),
+            <span class="number">0x211a</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">m7sel</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x211b</span> ... <span class="number">0x2120</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">m7_store</span>(<span class="ident">addr</span>, <span class="ident">value</span>),
+            <span class="number">0x2121</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">cgadd</span> <span class="op">=</span> <span class="ident">value</span>;
+                <span class="self">self</span>.<span class="ident">cg_low_buf</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+            }
+            <span class="number">0x2122</span> <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">cg_low_buf</span> {
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">cg_low_buf</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>),
+                <span class="prelude-val">Some</span>(<span class="ident">lo</span>) <span class="op">=&gt;</span> {
+                    <span class="self">self</span>.<span class="ident">cgram</span>[<span class="self">self</span>.<span class="ident">cgadd</span> <span class="kw">as</span> <span class="ident">u16</span> <span class="op">*</span> <span class="number">2</span>] <span class="op">=</span> <span class="ident">lo</span>;
+                    <span class="self">self</span>.<span class="ident">cgram</span>[<span class="self">self</span>.<span class="ident">cgadd</span> <span class="kw">as</span> <span class="ident">u16</span> <span class="op">*</span> <span class="number">2</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">=</span> <span class="ident">value</span>;
+                    <span class="self">self</span>.<span class="ident">cg_low_buf</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                    <span class="self">self</span>.<span class="ident">cgadd</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cgadd</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>);
+                }
+            },
+            <span class="number">0x2123</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">w12sel</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2124</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">w34sel</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2125</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">wobjsel</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2126</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">wh0</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2127</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">wh1</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2128</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">wh2</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2129</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">wh3</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x212a</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">wbglog</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x212b</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0xf0</span> <span class="op">!=</span> <span class="number">0</span> { <span class="macro">once</span><span class="macro">!</span>(<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;invalid value for $212b: ${:02X}&quot;</span>, <span class="ident">value</span>)); }
+                <span class="self">self</span>.<span class="ident">wobjlog</span> <span class="op">=</span> <span class="ident">value</span>;
+            }
+            <span class="number">0x212c</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0xe0</span> <span class="op">!=</span> <span class="number">0</span> { <span class="macro">once</span><span class="macro">!</span>(<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;invalid value for $212c: ${:02X}&quot;</span>, <span class="ident">value</span>)); }
+                <span class="self">self</span>.<span class="ident">tm</span> <span class="op">=</span> <span class="ident">value</span>;
+            }
+            <span class="number">0x212d</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0xe0</span> <span class="op">!=</span> <span class="number">0</span> { <span class="macro">once</span><span class="macro">!</span>(<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;invalid value for $212d: ${:02X}&quot;</span>, <span class="ident">value</span>)); }
+                <span class="self">self</span>.<span class="ident">ts</span> <span class="op">=</span> <span class="ident">value</span>;
+            }
+            <span class="number">0x212e</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0xe0</span> <span class="op">!=</span> <span class="number">0</span> { <span class="macro">once</span><span class="macro">!</span>(<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;invalid value for $212e: ${:02X}&quot;</span>, <span class="ident">value</span>)); }
+                <span class="self">self</span>.<span class="ident">tmw</span> <span class="op">=</span> <span class="ident">value</span>;
+            }
+            <span class="number">0x212f</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0xe0</span> <span class="op">!=</span> <span class="number">0</span> { <span class="macro">once</span><span class="macro">!</span>(<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;invalid value for $212f: ${:02X}&quot;</span>, <span class="ident">value</span>)); }
+                <span class="self">self</span>.<span class="ident">tsw</span> <span class="op">=</span> <span class="ident">value</span>;
+            }
+            <span class="number">0x2130</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">cgwsel</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2131</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">cgadsub</span> <span class="op">=</span> <span class="ident">value</span>,
+            <span class="number">0x2132</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">color</span> <span class="op">=</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x1f</span>;
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x80</span> <span class="op">!=</span> <span class="number">0</span> { <span class="self">self</span>.<span class="ident">coldata_b</span> <span class="op">=</span> <span class="ident">color</span>; }
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x40</span> <span class="op">!=</span> <span class="number">0</span> { <span class="self">self</span>.<span class="ident">coldata_g</span> <span class="op">=</span> <span class="ident">color</span>; }
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x20</span> <span class="op">!=</span> <span class="number">0</span> { <span class="self">self</span>.<span class="ident">coldata_r</span> <span class="op">=</span> <span class="ident">color</span>; }
+            }
+            <span class="number">0x2133</span> <span class="op">=&gt;</span> {
+                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x80</span> <span class="op">==</span> <span class="number">0</span>, <span class="string">&quot;ext. sync not yet implemented&quot;</span>);
+                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x40</span> <span class="op">==</span> <span class="number">0</span>, <span class="string">&quot;Mode 7 EXTBG not yet implemented&quot;</span>);
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x08</span> <span class="op">!=</span> <span class="number">0</span> { <span class="macro">once</span><span class="macro">!</span>(<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;pseudo-hires mode not yet implemented&quot;</span>)); }
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x04</span> <span class="op">!=</span> <span class="number">0</span> { <span class="macro">once</span><span class="macro">!</span>(<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;overscan not yet implemented&quot;</span>)); }
+                <span class="kw">if</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x03</span> <span class="op">!=</span> <span class="number">0</span> { <span class="macro">once</span><span class="macro">!</span>(<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;interlace not yet implemented&quot;</span>)); }
+                <span class="self">self</span>.<span class="ident">setini</span> <span class="op">=</span> <span class="ident">value</span>;
+            }
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid or unimplemented PPU store: ${:02X} to ${:04X}&quot;</span>, <span class="ident">value</span>, <span class="ident">addr</span>),
+        }
+    }
+
+    <span class="doccomment">/// Latches the H/V counters if `$4201` bit 7 is set (otherwise, no latching can occur)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">latch_counters</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="comment">// FIXME Call this when the port 2 peripheral wants to latch</span>
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">can_latch_counters</span> {
+            <span class="comment">// Note that this does not change the high/low byte flags of OP[HV]CT</span>
+            <span class="self">self</span>.<span class="ident">ophct</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">x</span>;
+            <span class="self">self</span>.<span class="ident">opvct</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scanline</span>;
+            <span class="self">self</span>.<span class="ident">ext_latch</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        }
+    }
+
+    <span class="doccomment">/// Runs the PPU for a bit.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This will render exactly one pixel (when in H/V-Blank, the pixel counter will be</span>
+    <span class="doccomment">/// incremented, but obviously nothing will be drawn).</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">in_h_blank</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">in_v_blank</span>() {
+            <span class="comment">// This pixel is visible</span>
+            <span class="kw">let</span> <span class="ident">pixel</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">render_pixel</span>();
+            <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">x</span>;
+            <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scanline</span>;
+            <span class="self">self</span>.<span class="ident">set_pixel</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="ident">pixel</span>);
+        }
+
+        <span class="self">self</span>.<span class="ident">x</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">x</span> <span class="op">==</span> <span class="number">340</span> {
+            <span class="comment">// End of H-Blank</span>
+            <span class="self">self</span>.<span class="ident">x</span> <span class="op">=</span> <span class="number">0</span>;
+            <span class="self">self</span>.<span class="ident">scanline</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">scanline</span> <span class="op">==</span> <span class="number">262</span> {
+                <span class="comment">// V-Blank ends now. The next `update` call will render the first visible pixel of</span>
+                <span class="comment">// a new frame.</span>
+                <span class="self">self</span>.<span class="ident">scanline</span> <span class="op">=</span> <span class="number">0</span>;
+
+                <span class="comment">// FIXME The timing is probably wrong, but we toggle `$213f` &quot;Interlace Field&quot; flag</span>
+                <span class="comment">// here:</span>
+                <span class="self">self</span>.<span class="ident">interlace_field</span> <span class="op">=</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">interlace_field</span>;
+            }
+        }
+
+        <span class="comment">// FIXME Not all pixels take 4 master cycles</span>
+        <span class="number">4</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_h_blank</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">x</span> <span class="op">&gt;=</span> <span class="number">256</span> }
+    <span class="comment">// Scanline 0 is displayed, but not rendered (usually cut off by TVs)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_v_blank</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">scanline</span> <span class="op">==</span> <span class="number">0</span> <span class="op">||</span> <span class="self">self</span>.<span class="ident">scanline</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&gt;=</span> <span class="ident">SCREEN_HEIGHT</span> }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">forced_blank</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">inidisp</span> <span class="op">&amp;</span> <span class="number">0x80</span> <span class="op">!=</span> <span class="number">0</span> }
+    <span class="kw">fn</span> <span class="ident">brightness</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> { <span class="self">self</span>.<span class="ident">inidisp</span> <span class="op">&amp;</span> <span class="number">0xf</span> }
+
+    <span class="doccomment">/// Returns the current X position</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">h_counter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u16</span> { <span class="self">self</span>.<span class="ident">x</span> }
+    <span class="doccomment">/// Returns the current Y position (scanline)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">v_counter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u16</span> { <span class="self">self</span>.<span class="ident">scanline</span> }
+
+    <span class="kw">fn</span> <span class="ident">set_pixel</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">x</span>: <span class="ident">u16</span>, <span class="ident">y</span>: <span class="ident">u16</span>, <span class="ident">rgb</span>: <span class="ident">Rgb</span>) {
+        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> (<span class="ident">y</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">SCREEN_WIDTH</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="ident">x</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">*</span> <span class="number">3</span>;
+        <span class="self">self</span>.<span class="ident">framebuf</span>[<span class="ident">start</span>] <span class="op">=</span> <span class="ident">rgb</span>.<span class="ident">r</span>;
+        <span class="self">self</span>.<span class="ident">framebuf</span>[<span class="ident">start</span><span class="op">+</span><span class="number">1</span>] <span class="op">=</span> <span class="ident">rgb</span>.<span class="ident">g</span>;
+        <span class="self">self</span>.<span class="ident">framebuf</span>[<span class="ident">start</span><span class="op">+</span><span class="number">2</span>] <span class="op">=</span> <span class="ident">rgb</span>.<span class="ident">b</span>;
+    }
+
+    <span class="doccomment">/// Store a byte to a &quot;write-twice&quot; `BGnxOFS` register</span>
+    <span class="kw">fn</span> <span class="ident">bg_store</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">addr</span>: <span class="ident">u16</span>, <span class="ident">val</span>: <span class="ident">u8</span>) {
+        <span class="kw">let</span> <span class="ident">reg</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">addr</span> {
+            <span class="number">0x210d</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bg1hofs</span>,
+            <span class="number">0x210e</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bg1vofs</span>,
+            <span class="number">0x210f</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bg2hofs</span>,
+            <span class="number">0x2110</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bg2vofs</span>,
+            <span class="number">0x2111</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bg3hofs</span>,
+            <span class="number">0x2112</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bg3vofs</span>,
+            <span class="number">0x2113</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bg4hofs</span>,
+            <span class="number">0x2114</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bg4vofs</span>,
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid BG register ${:04X}&quot;</span>, <span class="ident">addr</span>),
+        };
+
+        <span class="kw">if</span> <span class="ident">addr</span> <span class="op">&amp;</span> <span class="number">1</span> <span class="op">!=</span> <span class="number">0</span> {
+            <span class="comment">// Horizontal</span>
+            <span class="kw-2">*</span><span class="ident">reg</span> <span class="op">=</span> ((<span class="ident">val</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="op">&lt;&lt;</span> <span class="number">8</span>) <span class="op">|</span> (<span class="self">self</span>.<span class="ident">bg_old</span> <span class="kw">as</span> <span class="ident">u16</span> <span class="op">&amp;</span> <span class="op">!</span><span class="number">7</span>) <span class="op">|</span> ((<span class="kw-2">*</span><span class="ident">reg</span> <span class="op">&gt;&gt;</span> <span class="number">8</span>) <span class="op">&amp;</span> <span class="number">7</span>);
+        } <span class="kw">else</span> {
+            <span class="comment">// Vertical</span>
+            <span class="kw-2">*</span><span class="ident">reg</span> <span class="op">=</span> ((<span class="ident">val</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="op">&lt;&lt;</span> <span class="number">8</span>) <span class="op">|</span> <span class="self">self</span>.<span class="ident">bg_old</span> <span class="kw">as</span> <span class="ident">u16</span>;
+        }
+
+        <span class="self">self</span>.<span class="ident">bg_old</span> <span class="op">=</span> <span class="ident">val</span>;
+    }
+
+    <span class="doccomment">/// Store a byte to a &quot;write-twice&quot; Mode 7 register</span>
+    <span class="kw">fn</span> <span class="ident">m7_store</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">addr</span>: <span class="ident">u16</span>, <span class="ident">val</span>: <span class="ident">u8</span>) {
+        <span class="kw">let</span> <span class="ident">reg</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">addr</span> {
+            <span class="number">0x210d</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">m7hofs</span>,
+            <span class="number">0x210e</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">m7vofs</span>,
+            <span class="number">0x211b</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">m7a</span>,
+            <span class="number">0x211c</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">m7b_last</span> <span class="op">=</span> <span class="ident">val</span>;
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">m7b</span>
+            },
+            <span class="number">0x211d</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">m7c</span>,
+            <span class="number">0x211e</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">m7d</span>,
+            <span class="number">0x211f</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">m7x</span>,
+            <span class="number">0x2120</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">m7y</span>,
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;invalid Mode 7 write-twice register ${:04X}&quot;</span>, <span class="ident">addr</span>),
+        };
+
+        <span class="kw-2">*</span><span class="ident">reg</span> <span class="op">=</span> (<span class="ident">val</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="op">&lt;&lt;</span> <span class="number">8</span> <span class="op">|</span> <span class="self">self</span>.<span class="ident">m7_old</span> <span class="kw">as</span> <span class="ident">u16</span>;
+        <span class="self">self</span>.<span class="ident">m7_old</span> <span class="op">=</span> <span class="ident">val</span>;
+    }
+
+    <span class="doccomment">/// Update the internal OAM address register after a write to `$2102` or `$2103`</span>
+    <span class="kw">fn</span> <span class="ident">update_oam_addr</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">=</span> (((<span class="self">self</span>.<span class="ident">oamaddh</span> <span class="kw">as</span> <span class="ident">u16</span> <span class="op">&amp;</span> <span class="number">0x01</span>) <span class="op">&lt;&lt;</span> <span class="number">8</span>) <span class="op">|</span> <span class="self">self</span>.<span class="ident">oamaddl</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="op">&lt;&lt;</span> <span class="number">1</span>;
+    }
+    <span class="kw">fn</span> <span class="ident">oam_store</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">u8</span>) {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">&amp;</span> <span class="number">0x01</span> <span class="op">==</span> <span class="number">0</span> {
+            <span class="comment">// Even address</span>
+            <span class="self">self</span>.<span class="ident">oam_lsb</span> <span class="op">=</span> <span class="ident">val</span>;
+        }
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">&lt;</span> <span class="number">0x200</span> {
+            <span class="comment">// Write to the first 512 Bytes</span>
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">&amp;</span> <span class="number">0x01</span> <span class="op">!=</span> <span class="number">0</span> {
+                <span class="comment">// Odd address</span>
+                <span class="comment">// Address points to the MSB (=`val`) of the word we want to update</span>
+                <span class="self">self</span>.<span class="ident">oam</span>[<span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">-</span> <span class="number">1</span>] <span class="op">=</span> <span class="self">self</span>.<span class="ident">oam_lsb</span>;
+                <span class="self">self</span>.<span class="ident">oam</span>[<span class="self">self</span>.<span class="ident">oamaddr</span>] <span class="op">=</span> <span class="ident">val</span>;
+            }
+        } <span class="kw">else</span> {
+            <span class="comment">// Write to 512-544 (&gt;544 is a mirror of 512-544)</span>
+            <span class="self">self</span>.<span class="ident">oam</span>[<span class="number">0x200</span> <span class="op">+</span> (<span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">&amp;</span> <span class="number">0x1f</span>)] <span class="op">=</span> <span class="ident">val</span>;
+        }
+        <span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">&amp;</span> <span class="number">0x3ff</span>;   <span class="comment">// reduce to 10 bits</span>
+    }
+    <span class="kw">fn</span> <span class="ident">oam_load</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">addr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">oamaddr</span>;
+        <span class="kw">if</span> <span class="ident">addr</span> <span class="op">&gt;=</span> <span class="number">0x200</span> { <span class="ident">addr</span> <span class="op">=</span> <span class="number">0x200</span> <span class="op">+</span> (<span class="ident">addr</span> <span class="op">&amp;</span> <span class="number">0x1f</span>); }
+
+        <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">oam</span>[<span class="ident">addr</span>];
+        <span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">oamaddr</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">&amp;</span> <span class="number">0x3ff</span>;   <span class="comment">// reduce to 10 bits</span>
+        <span class="ident">byte</span>
+    }
+
+    <span class="doccomment">/// Performs VRAM prefetch, loading 16 bits of data into `self.vram_prefetch`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// VRAM prefetch occurs after changing the VRAM address by writing $2116/$2117, or *before*</span>
+    <span class="doccomment">/// incrementing the VRAM address after a read from $2139/$213A.</span>
+    <span class="kw">fn</span> <span class="ident">vram_prefetch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">vram_translate_addr</span>(<span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">*</span> <span class="number">2</span>);
+        <span class="comment">// FIXME is the endianness correct?</span>
+        <span class="self">self</span>.<span class="ident">vram_prefetch</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">vram</span>[<span class="ident">addr</span> <span class="op">+</span> <span class="number">1</span>] <span class="kw">as</span> <span class="ident">u16</span>) <span class="op">&lt;&lt;</span> <span class="number">8</span> <span class="op">|</span> <span class="self">self</span>.<span class="ident">vram</span>[<span class="ident">addr</span>] <span class="kw">as</span> <span class="ident">u16</span>;
+    }
+
+    <span class="doccomment">/// Get the value to increment the VRAM word address by</span>
+    <span class="kw">fn</span> <span class="ident">vram_addr_increment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u16</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">vmain</span> <span class="op">&amp;</span> <span class="number">0b11</span> {
+            <span class="number">0b00</span> <span class="op">=&gt;</span> <span class="number">1</span>,
+            <span class="number">0b01</span> <span class="op">=&gt;</span> <span class="number">32</span>,
+            <span class="comment">// FIXME: What is really correct here? (the sources disagree)</span>
+            <span class="number">0b10</span> <span class="op">=&gt;</span> <span class="number">64</span>,
+            <span class="number">0b11</span> <span class="op">=&gt;</span> <span class="number">128</span>,
+            _ <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+        }
+    }
+    <span class="doccomment">/// Translate a VRAM byte address according to the address translation bits of `$2115`</span>
+    <span class="kw">fn</span> <span class="ident">vram_translate_addr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">addr</span>: <span class="ident">u16</span>) <span class="op">-&gt;</span> <span class="ident">u16</span> {
+        <span class="comment">// * 00 = None</span>
+        <span class="comment">// * 01 = Remap addressing aaaaaaaaBBBccccc =&gt; aaaaaaaacccccBBB</span>
+        <span class="comment">// * 10 = Remap addressing aaaaaaaBBBcccccc =&gt; aaaaaaaccccccBBB</span>
+        <span class="comment">// * 11 = Remap addressing aaaaaaBBBccccccc =&gt; aaaaaacccccccBBB</span>
+        <span class="kw">let</span> <span class="ident">trans</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">vmain</span> <span class="op">&amp;</span> <span class="number">0b1100</span>) <span class="op">&gt;&gt;</span> <span class="number">2</span>;
+        <span class="kw">match</span> <span class="ident">trans</span> {
+            <span class="number">0b00</span> <span class="op">=&gt;</span> <span class="ident">addr</span>,
+            <span class="number">0b01</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;NYI: VRAM address translation&quot;</span>),   <span class="comment">// FIXME</span>
+            <span class="number">0b10</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;NYI: VRAM address translation&quot;</span>),
+            <span class="number">0b11</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;NYI: VRAM address translation&quot;</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+        }
+    }
+    <span class="doccomment">/// Store to `$2118`. This writes the Byte to the current VRAM word address and increments it</span>
+    <span class="doccomment">/// accordingly.</span>
+    <span class="kw">fn</span> <span class="ident">vram_store_low</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="ident">u8</span>) {
+        <span class="kw">let</span> <span class="ident">inc</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">vmain</span> <span class="op">&amp;</span> <span class="number">0x80</span> <span class="op">==</span> <span class="number">0</span> { <span class="self">self</span>.<span class="ident">vram_addr_increment</span>() } <span class="kw">else</span> { <span class="number">0</span> };
+        <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">vram_translate_addr</span>(<span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">*</span> <span class="number">2</span>);
+        <span class="self">self</span>.<span class="ident">vram</span>[<span class="ident">addr</span>] <span class="op">=</span> <span class="ident">data</span>;
+        <span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">+=</span> <span class="ident">inc</span>;
+    }
+    <span class="doccomment">/// Store to `$2119`. This writes the Byte to the current VRAM word address + 1 and increments</span>
+    <span class="doccomment">/// it accordingly.</span>
+    <span class="kw">fn</span> <span class="ident">vram_store_high</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="ident">u8</span>) {
+        <span class="kw">let</span> <span class="ident">inc</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">vmain</span> <span class="op">&amp;</span> <span class="number">0x80</span> <span class="op">==</span> <span class="number">0</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">vram_addr_increment</span>() };
+        <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">vram_translate_addr</span>(<span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">*</span> <span class="number">2</span> <span class="op">+</span> <span class="number">1</span>);
+        <span class="self">self</span>.<span class="ident">vram</span>[<span class="ident">addr</span>] <span class="op">=</span> <span class="ident">data</span>;
+        <span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">+=</span> <span class="ident">inc</span>;
+    }
+    <span class="kw">fn</span> <span class="ident">vram_load_low</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="kw">let</span> <span class="ident">inc</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">vmain</span> <span class="op">&amp;</span> <span class="number">0x80</span> <span class="op">==</span> <span class="number">0</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">vram_addr_increment</span>() };
+        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">vram_prefetch</span> <span class="kw">as</span> <span class="ident">u8</span>;
+        <span class="kw">if</span> <span class="ident">inc</span> <span class="op">!=</span> <span class="number">0</span> {
+            <span class="comment">// FIXME maybe only VMAIN bit 7 is responsible for prefetch?</span>
+            <span class="self">self</span>.<span class="ident">vram_prefetch</span>();
+            <span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">+=</span> <span class="ident">inc</span>;
+        }
+        <span class="ident">val</span>
+    }
+    <span class="kw">fn</span> <span class="ident">vram_load_high</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="kw">let</span> <span class="ident">inc</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">vmain</span> <span class="op">&amp;</span> <span class="number">0x80</span> <span class="op">==</span> <span class="number">0</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">vram_addr_increment</span>() };
+        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">vram_prefetch</span> <span class="op">&gt;&gt;</span> <span class="number">8</span>) <span class="kw">as</span> <span class="ident">u8</span>;
+        <span class="kw">if</span> <span class="ident">inc</span> <span class="op">!=</span> <span class="number">0</span> {
+            <span class="comment">// FIXME maybe only VMAIN bit 7 is responsible for prefetch?</span>
+            <span class="self">self</span>.<span class="ident">vram_prefetch</span>();
+            <span class="self">self</span>.<span class="ident">vmaddr</span> <span class="op">+=</span> <span class="ident">inc</span>;
+        }
+        <span class="ident">val</span>
+    }
+}
+</pre>
+</section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "breeze_core";
+    </script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

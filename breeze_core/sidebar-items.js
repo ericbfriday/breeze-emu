@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["dma","Implements DMA (Direct Memory Access)."],["input","Input emulation layer"],["ppu","Emulates the Picture Processing Unit."],["record","Input recording and replaying"],["rom","ROM image loading code"],["save","Savestate writing and reading"],["snes","This module glues everything together and coordinates emulation."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["joypad","The standard joypad. The most important peripheral. Can be plugged into the Multitap, but that isn't yet implemented or reflected here."]]});

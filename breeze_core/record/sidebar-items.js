@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["RecordingFormat",""]],"fn":[["create_recorder","Create a recorder for a specified format."],["create_replayer",""]],"trait":[["Recorder","Trait for input recorders"],["Replayer","Trait for record replayers"],["WriteSeek","Trait for recording sources"]]});

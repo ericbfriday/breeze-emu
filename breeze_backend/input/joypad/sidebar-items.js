@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["JoypadButton","(C-like) Enum of all Joypad buttons."]],"struct":[["JoypadState","State of a SNES joypad."]],"trait":[["JoypadImpl","Trait for joypad implementations."]]});

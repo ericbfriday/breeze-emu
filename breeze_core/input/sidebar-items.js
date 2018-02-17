@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Peripheral","Enumeration of things that can be plugged into a controller port on the SNES."]],"struct":[["Input","Controller input management."],["Ports","Represents the 2 controller ports on the SNES"]]});

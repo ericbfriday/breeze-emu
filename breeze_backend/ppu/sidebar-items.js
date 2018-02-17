@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["SCREEN_HEIGHT","Physical screen height (this is the height of a field, or a half-frame)"],["SCREEN_WIDTH","Physical screen width (this is the width of a field, or a half-frame)"]]});

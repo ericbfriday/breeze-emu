@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["WRAM_SIZE",""]],"struct":[["Emulator","The emulator."],["Peripherals","Contains everything connected to the CPU via one of the two address buses. All memory accesses will be directed through this."],["Snes","SNES system state"],["Wram",""]]});

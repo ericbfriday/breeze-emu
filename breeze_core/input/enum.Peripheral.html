@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Peripheral` enum in crate `breeze_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Peripheral">
+
+    <title>breeze_core::input::Peripheral - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc enum">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Enum Peripheral</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.Joypad">Joypad</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new_joypad">new_joypad</a><a href="#method.set_latch">set_latch</a><a href="#method.read_bit">read_bit</a><a href="#method.set_io_bit">set_io_bit</a><a href="#method.read_io_bit">read_io_bit</a><a href="#method.update_hv_latch">update_hv_latch</a><a href="#method.next_frame">next_frame</a></div></div><p class='location'><a href='../index.html'>breeze_core</a>::<wbr><a href='index.html'>input</a></p><script>window.sidebarCurrent = {name: 'Peripheral', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>breeze_core</a>::<wbr><a href='index.html'>input</a>::<wbr><a class="enum" href=''>Peripheral</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/breeze_core/input/port.rs.html#17-28' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum Peripheral {
+    Joypad {
+        imp: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="trait" href="../../breeze_backend/input/joypad/trait.JoypadImpl.html" title="trait breeze_backend::input::joypad::JoypadImpl">JoypadImpl</a>&gt;,
+        state: <a class="struct" href="../../breeze_backend/input/joypad/struct.JoypadState.html" title="struct breeze_backend::input::joypad::JoypadState">JoypadState</a>,
+    },
+}</pre><div class='docblock'><p>Enumeration of things that can be plugged into a controller port on the SNES.</p>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id="variant.Joypad" class="variant small-section-header"><a href="#variant.Joypad" class="anchor field"></a><span id='Joypad.v' class='invisible'><code>Joypad</code></span></span><div class='docblock'><p>The standard SNES joypad: A, B, X, Y, L, R, Start, Select, D-Pad</p>
+</div><span class='docblock autohide sub-variant' id='variant.Joypad.fields'><h3 class='fields'>Fields of <code>Joypad</code></h3>
+
+                           <table><tr><td id='variant.Joypad.field.imp'><span id='Joypad.v.imp.v' class='invisible'><code>imp:&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="trait" href="../../breeze_backend/input/joypad/trait.JoypadImpl.html" title="trait breeze_backend::input::joypad::JoypadImpl">JoypadImpl</a>&gt;</code></span></td><td><div class='docblock'><p>The actual implementation (provided by the backend)</p>
+</div></td></tr><tr><td id='variant.Joypad.field.state'><span id='Joypad.v.state.v' class='invisible'><code>state:&nbsp;<a class="struct" href="../../breeze_backend/input/joypad/struct.JoypadState.html" title="struct breeze_backend::input::joypad::JoypadState">JoypadState</a></code></span></td><td><div class='docblock'><p>Current joypad state. When the latch is active, this is updated by asking the backend
+for the current state.</p>
+</div></td></tr></table></span>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="enum" href="../../breeze_core/input/enum.Peripheral.html" title="enum breeze_core::input::Peripheral">Peripheral</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#33-41' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Construction</p>
+</div><div class='impl-items'><h4 id='method.new_joypad' class="method"><span id='new_joypad.v' class='invisible'><code>pub fn <a href='#method.new_joypad' class='fnname'>new_joypad</a>(imp: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="trait" href="../../breeze_backend/input/joypad/trait.JoypadImpl.html" title="trait breeze_backend::input::joypad::JoypadImpl">JoypadImpl</a>&gt;) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#35-40' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new joypad peripheral using the given <code>JoypadImpl</code>.</p>
+</div></div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="enum" href="../../breeze_core/input/enum.Peripheral.html" title="enum breeze_core::input::Peripheral">Peripheral</a></code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#44-118' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>CPU interface</p>
+</div><div class='impl-items'><h4 id='method.set_latch' class="method"><span id='set_latch.v' class='invisible'><code>pub fn <a href='#method.set_latch' class='fnname'>set_latch</a>(&amp;mut self, latch: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#49-57' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Called when the value of the lowest bit of <code>$4016</code> changes. When set to 1, the controller
+should latch its input (whatever that means is specific to the attached peripheral).</p>
+
+<p>Auto-joypad mode writes 1 and then 0 to the latch before reading data.</p>
+</div><h4 id='method.read_bit' class="method"><span id='read_bit.v' class='invisible'><code>pub fn <a href='#method.read_bit' class='fnname'>read_bit</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#64-73' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Read a bit from the <code>Data1</code> and <code>Data2</code> lines. Called on serial reads either via Auto-Joypad
+mode or reads from <code>$4016</code>/<code>$4017</code>.</p>
+
+<p>Returns the bits on <code>Data1</code> and <code>Data2</code>, respectively. For Joypads, for example, <code>Data2</code>
+will always be <code>false</code>, since it&#39;s not connected.</p>
+</div><h4 id='method.set_io_bit' class="method"><span id='set_io_bit.v' class='invisible'><code>pub fn <a href='#method.set_io_bit' class='fnname'>set_io_bit</a>(&amp;mut self, _iobit: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#80-84' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Sets the bit written out to the <code>IOBit</code> line.</p>
+
+<p>This is called when the SNES writes to the highest 2 bits of <code>$4213</code>. (If these are set to
+0, reads from <code>$4201</code> will always return 0. If these are set to 1, then reads from <code>$4201</code>
+will return whatever value is written to the respective <code>IOBit</code> lines.)</p>
+</div><h4 id='method.read_io_bit' class="method"><span id='read_io_bit.v' class='invisible'><code>pub fn <a href='#method.read_io_bit' class='fnname'>read_io_bit</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#94-99' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Called on reads from <code>$4201</code> when the respective bit in <code>$4213</code> is set to 1 (if the bit in
+<code>$4213</code> is set to 0, all reads will return 0 and this method is not called).</p>
+
+<p>This should return the current status of the <code>IOBit</code> line.</p>
+
+<p>When using the <code>IOBit</code> line of port 2 to latch the PPU&#39;s H/V Counters, use
+<code>needs_hv_latch_control</code> and <code>update_hv_latch</code> <em>in addition</em> to this (the counters are
+latched when <code>IOBit</code> transitions from 1 to 0).</p>
+</div><h4 id='method.update_hv_latch' class="method"><span id='update_hv_latch.v' class='invisible'><code>pub fn <a href='#method.update_hv_latch' class='fnname'>update_hv_latch</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#106-110' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This will be called on every pixel. When this method returns <code>true</code>, the PPU&#39;s H/V Counters
+will be latched.</p>
+
+<p>Note that the returned value is not returned on read from the I/O Port (<code>$4201</code>). You have
+to make sure that this method and <code>read_io_bit</code> return correct values.</p>
+</div><h4 id='method.next_frame' class="method"><span id='next_frame.v' class='invisible'><code>pub fn <a href='#method.next_frame' class='fnname'>next_frame</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/breeze_core/input/port.rs.html#113-117' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Called once after every frame</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "breeze_core";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>
