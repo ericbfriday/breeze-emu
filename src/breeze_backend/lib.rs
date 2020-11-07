@@ -20,7 +20,7 @@ pub enum BackendAction {
 }
 
 /// Result with an erased error type.
-pub type BackendResult<T> = Result<T, Box<Error>>;
+pub type BackendResult<T> = Result<T, Box<dyn Error>>;
 
 /// Trait for screen renderers. Once per frame, they are given the raw screen data produced by the
 /// PPU and can then render this content in a backend-specific way.

@@ -89,7 +89,7 @@ impl SaveState for bool {
 
     fn restore_state<R: Read + ?Sized>(&mut self, r: &mut R) -> io::Result<()> {
         let mut val = [0xff];
-        try!(read_exact(r, &mut val));
+        read_exact(r, &mut val)?;
 
         match val[0] {
             0 => *self = false,
@@ -105,10 +105,10 @@ impl SaveState for bool {
 impl<T: SaveState + Default> SaveState for Option<T> {
     fn save_state<W: Write + ?Sized>(&self, w: &mut W) -> io::Result<()> {
         match *self {
-            None => try!(false.save_state(w)),
+            None => false.save_state(w)?,
             Some(ref t) => {
-                try!(true.save_state(w));
-                try!(t.save_state(w));
+                true.save_state(w)?;
+                t.save_state(w)?;
             }
         }
         Ok(())
@@ -116,13 +116,13 @@ impl<T: SaveState + Default> SaveState for Option<T> {
 
     fn restore_state<R: Read + ?Sized>(&mut self, r: &mut R) -> io::Result<()> {
         let mut val = [0xff];
-        try!(read_exact(r, &mut val));
+        read_exact(r, &mut val)?;
 
         match val[0] {
             0 => *self = None,
             1 => {
                 let mut t = T::default();
-                try!(t.restore_state(r));
+                t.restore_state(r)?;
                 *self = Some(t);
             }
             // FIXME Ugly, but works for now
@@ -138,7 +138,7 @@ macro_rules! impl_fixed_size_array {
         impl<T: SaveState> SaveState for [T; impl_fixed_size_array!($size)] {
             fn save_state<W: Write + ?Sized>(&self, w: &mut W) -> io::Result<()> {
                 for t in self {
-                    try!(t.save_state(w))
+                    t.save_state(w)?
                 }
                 Ok(())
             }
@@ -146,7 +146,7 @@ macro_rules! impl_fixed_size_array {
             fn restore_state<R: Read + ?Sized>(&mut self, r: &mut R) -> io::Result<()> {
                 // Assume `self` always has the same size
                 for t in self {
-                    try!(t.restore_state(r));
+                    t.restore_state(r)?;
                 }
                 Ok(())
             }
@@ -165,23 +165,23 @@ impl_fixed_size_array!(
 impl<T: SaveState + Default> SaveState for Vec<T> {
     fn save_state<W: Write + ?Sized>(&self, w: &mut W) -> io::Result<()> {
         // Write the len first:
-        try!(self.len().save_state(w));
+        self.len().save_state(w)?;
         for item in self {
-            try!(item.save_state(w));
+            item.save_state(w)?;
         }
         Ok(())
     }
 
     fn restore_state<R: Read + ?Sized>(&mut self, r: &mut R) -> io::Result<()> {
         let mut len = 0usize;
-        try!(len.restore_state(r));
+        len.restore_state(r)?;
         // FIXME We should limit the size of `len`, but it's unclear what limit to impose: Some
         // emulators may want to save a few hundred MB of RAM or something like that
         self.clear();
         self.reserve(len);
         for _ in 0..len {
             let mut obj = T::default();
-            try!(obj.restore_state(r));
+            obj.restore_state(r)?;
             self.push(obj);
         }
         Ok(())
